@@ -42,10 +42,18 @@ async function newPage({ clearStorage = true } = {}) {
   if (clearStorage) {
     // 只在首次 goto 前清一次。若挂 evaluateOnNewDocument，reload 时也会再清，
     // 「刷新后仍保持选择」就永远测不出来。
-    await page.goto(`${base}?lang=en`);
+    await gotoApp(page, `${base}?lang=en`);
     await page.evaluate(() => { try { window.localStorage.clear(); } catch {} });
   }
   return { page, errs, bad };
+}
+
+// 就绪判据用「DOM 就绪 + 应用已渲染欢迎页」，而不是 networkidle0。
+// GitHub Pages 的 CDN 从本机访问时单图可达 9–38 秒，展厅一屏就要取 8 张图，
+// networkidle0 在 90 秒内根本不会到达——那是链路慢，不是页面有问题。
+async function gotoApp(page, url) {
+  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 120000 });
+  await page.waitForSelector('.welcome-screen.is-active', { timeout: 120000 });
 }
 
 async function visibleText(page, selector) {
@@ -69,7 +77,7 @@ async function anyCJK(page) {
 // ---------- 1. 默认英文 ----------
 {
   const { page } = await newPage();
-  await page.goto(`${base}?lang=en`, { waitUntil: 'networkidle0', timeout: 90000 });
+  await gotoApp(page, `${base}?lang=en`);
   await new Promise((r) => setTimeout(r, 1500));
   const htmlLang = await page.evaluate(() => document.documentElement.lang);
   const welcomeActive = await page.$eval('.welcome-screen', (el) => el.classList.contains('is-active')).catch(() => false);
@@ -93,7 +101,7 @@ async function anyCJK(page) {
 {
   const { page, errs, bad } = await newPage();
   // 带 smoke=1 才会注册 __timeGallery 调试接缝，供 aimAtArtwork 定位画作
-  await page.goto(`${base}?lang=en&smoke=1`, { waitUntil: 'networkidle0', timeout: 90000 });
+  await gotoApp(page, `${base}?lang=en&smoke=1`);
   await new Promise((r) => setTimeout(r, 1200));
   await page.click('.welcome-start');
   await page.waitForSelector('.timeline-screen.is-active', { timeout: 30000 });
@@ -141,8 +149,27 @@ async function anyCJK(page) {
   if (opened) {
     const detText = await visibleText(page, '.detail-overlay');
     check('画作详情英文文案无汉字', !CJK.test(detText), detText.replace(/\n+/g, ' ').slice(0, 90));
-    const img = await page.$eval('.detail-overlay.is-active .detail-image-wrap img', (el) => ({ ok: el.complete && el.naturalWidth > 0, src: el.getAttribute('src') })).catch(() => null);
-    check('详情图片加载成功', !!img && img.ok, img ? img.src.slice(-30) : 'none');
+    // 等待图片真正解码完成再判定，并记录耗时。
+    // 固定短等待会把「加载慢但成功」误判为失败：GitHub Pages 的 CDN 从本机
+    // 访问时单图可达 9–38 秒（对照 nginx.org / github.com 均 1–3 秒），属链路
+    // 问题而非代码缺陷，所以给足时间并把实测耗时打出来供判断。
+    const started = Date.now();
+    let imgOk = false;
+    try {
+      await page.waitForFunction(
+        () => {
+          const el = document.querySelector('.detail-overlay.is-active .detail-image-wrap img');
+          return !!el && el.complete && el.naturalWidth > 0;
+        },
+        { timeout: 90000 },
+      );
+      imgOk = true;
+    } catch {
+      imgOk = false;
+    }
+    const spent = Date.now() - started;
+    const src = await page.$eval('.detail-overlay.is-active .detail-image-wrap img', (el) => el.getAttribute('src')).catch(() => 'none');
+    check('详情图片加载成功', imgOk, `${src} 用时 ${spent}ms`);
     const dim = await page.$eval('.detail-dimensions', (el) => (el.innerText || '').trim()).catch(() => '');
     check('画作尺寸标签为英文', !!dim && !CJK.test(dim), dim);
   }
@@ -155,7 +182,7 @@ async function anyCJK(page) {
 // ---------- 3. 切回中文界面 ----------
 {
   const { page } = await newPage();
-  await page.goto(`${base}?lang=zh`, { waitUntil: 'networkidle0', timeout: 90000 });
+  await gotoApp(page, `${base}?lang=zh`);
   await new Promise((r) => setTimeout(r, 1200));
   const htmlLang = await page.evaluate(() => document.documentElement.lang);
   check('中文模式 <html lang> 为 zh-CN', htmlLang === 'zh-CN', htmlLang);
@@ -175,7 +202,7 @@ async function anyCJK(page) {
   const { page } = await newPage();
   // 持久化测试必须用「无 ?lang= 参数」的 URL：?lang= 优先级高于 localStorage，
   // 带着它 reload 会按设计覆盖存储值，测不出持久化。
-  await page.goto(base, { waitUntil: 'networkidle0', timeout: 90000 });
+  await gotoApp(page, base);
   await new Promise((r) => setTimeout(r, 1200));
   const before = await page.evaluate(() => document.documentElement.lang);
   await page.click('.language-toggle--default button[data-lang="zh-CN"]');
@@ -186,7 +213,8 @@ async function anyCJK(page) {
   check('切换后欢迎页变中文', CJK.test(zhNow), zhNow.split('\n')[0] || '');
 
   // 刷新仍保持（localStorage）
-  await page.reload({ waitUntil: 'networkidle0', timeout: 90000 });
+  await page.reload({ waitUntil: 'domcontentloaded', timeout: 120000 });
+  await page.waitForSelector('.welcome-screen.is-active', { timeout: 120000 });
   await new Promise((r) => setTimeout(r, 1000));
   const persisted = await page.evaluate(() => document.documentElement.lang);
   check('刷新后语言保持中文（localStorage）', persisted === 'zh-CN', persisted);
@@ -194,7 +222,8 @@ async function anyCJK(page) {
   // 切回英文并再刷新，验证双向持久化
   await page.click('.language-toggle--default button[data-lang="en"]');
   await new Promise((r) => setTimeout(r, 700));
-  await page.reload({ waitUntil: 'networkidle0', timeout: 90000 });
+  await page.reload({ waitUntil: 'domcontentloaded', timeout: 120000 });
+  await page.waitForSelector('.welcome-screen.is-active', { timeout: 120000 });
   await new Promise((r) => setTimeout(r, 1000));
   const backEn = await page.evaluate(() => document.documentElement.lang);
   check('切回英文并刷新后保持英文', backEn === 'en', backEn);
