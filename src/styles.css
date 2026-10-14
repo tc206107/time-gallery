@@ -300,6 +300,75 @@ strong {
   font-weight: 600;
 }
 
+/* Language toggle */
+.language-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(255, 252, 244, 0.86);
+  box-shadow: 0 8px 18px rgba(74, 59, 38, 0.14);
+  pointer-events: auto;
+}
+
+/* 触控目标下限 44px：桌面与移动端都不低于此值。 */
+.language-toggle__option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 68px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: var(--blue-deep);
+  background: transparent;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  transition:
+    background 0.22s var(--ease),
+    color 0.22s var(--ease);
+}
+
+.language-toggle__option:hover {
+  background: rgba(47, 111, 143, 0.14);
+}
+
+.language-toggle__option.is-active {
+  color: #fffaf1;
+  background: var(--blue);
+  box-shadow: 0 6px 14px rgba(23, 68, 95, 0.26);
+}
+
+/* 欢迎页：控件留在文案列内（文档流），结构上不可能与标题/副标题/按钮重叠。 */
+.welcome-lang {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+/* 展厅 HUD：深色玻璃底，尺寸与相邻的「返回时间轴」按钮同高。 */
+.language-toggle--compact {
+  padding: 3px;
+  background: rgba(23, 68, 95, 0.62);
+  box-shadow: 0 6px 16px rgba(19, 46, 58, 0.28);
+}
+
+.language-toggle--compact .language-toggle__option {
+  min-width: 58px;
+  min-height: 44px;
+  padding: 0 10px;
+  color: #f4ecd8;
+  font-size: 12px;
+}
+
+.language-toggle--compact .language-toggle__option.is-active {
+  color: var(--blue-deep);
+  background: #f4ecd8;
+  box-shadow: none;
+}
+
 /* Timeline */
 .timeline-screen {
   display: flex;
@@ -550,7 +619,16 @@ strong {
   color: #fff8e8;
   background: rgba(31, 45, 52, 0.78);
   box-shadow: 0 8px 22px rgba(22, 32, 38, 0.28);
-  white-space: nowrap;
+  /* 宽度必须设上限并允许换行：CSS2D 标签按画作投影定位，
+     相邻画作的标签在屏幕上会靠得很近。原先 nowrap + 无上限，
+     中文标题最长已达 290px、英文达 477px，直接压住邻居的文字
+     （实测英文 6 对压盖、最大 154x34px）。设上限后长标题折行，
+     换高度换宽度，避免横向侵占邻牌。 */
+  max-width: 180px;
+  white-space: normal;
+  overflow-wrap: break-word;
+  text-align: center;
+  line-height: 1.2;
   pointer-events: none;
   user-select: none;
 }
@@ -583,6 +661,15 @@ strong {
 
 .gallery-hud .secondary-button {
   pointer-events: auto;
+}
+
+/* 左上角一组控件：返回按钮 + 语言切换器（展厅内的语言入口）。
+   包一层是为了不改变 .gallery-hud 原有的 space-between 布局与 900px 换行规则。 */
+.gallery-hud-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
 }
 
 .gallery-period {

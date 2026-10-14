@@ -1,4 +1,5 @@
 import manifest, { artists, artistsById, artworks, periods, periodsById } from './data/artworks.js';
+import { applyDocumentLang, getLang, pick, setLang, subscribe, t } from './i18n/index.js';
 import { ArtworkDetail, Timeline, WelcomeScreen } from './ui/index.js';
 import { GalleryEngine } from './three/index.js';
 import './styles.css';
@@ -6,6 +7,21 @@ import './styles.css';
 const app = document.querySelector('#app');
 let currentScreen = 'welcome';
 let currentArtwork = null;
+
+// 文档级元信息（<html lang> / <title> / description / iOS 主屏名）跟着语言走。
+function setMetaContent(selector, value) {
+  const el = document.querySelector(selector);
+  if (el && value) el.setAttribute('content', value);
+}
+
+function applyDocumentMeta() {
+  const project = manifest.project || {};
+  const title = pick(project, 'name', t('doc.title'));
+  applyDocumentLang(getLang());
+  document.title = title;
+  setMetaContent('meta[name="description"]', pick(project, 'description', t('doc.description')));
+  setMetaContent('meta[name="apple-mobile-web-app-title"]', title);
+}
 
 const welcome = new WelcomeScreen({
   container: app,
@@ -72,6 +88,13 @@ if (new URLSearchParams(window.location.search).has('smoke')) {
     getArtworkOcclusion() {
       return gallery.getArtworkOcclusion();
     },
+    // 语言自检接缝：详情面板盖住 HUD 时仍需能切语言（见 tools/_i18n-check.mjs）。
+    setLang(lang) {
+      return setLang(lang);
+    },
+    getLang() {
+      return getLang();
+    },
   };
 }
 
@@ -89,4 +112,21 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+// 语言切换的唯一分发点：先落地文档级元信息，再重刷「当前那一屏」。
+// 画廊屏只重刷 HUD 文本与 CSS2D 标注，不重建 renderer（见 GalleryEngine.refreshLanguage）。
+subscribe(() => {
+  applyDocumentMeta();
+  if (currentScreen === 'gallery') {
+    gallery.refreshLanguage();
+    detail.refreshLanguage();
+    return;
+  }
+  if (currentScreen === 'timeline') {
+    timeline.show(periods, artworks);
+    return;
+  }
+  welcome.show();
+});
+
+applyDocumentMeta();
 welcome.show();

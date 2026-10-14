@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import { CSS2DObject, CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
+import { createLanguageToggle } from '../i18n/LanguageToggle.js';
+import { pick } from '../i18n/pick.js';
+import { t } from '../i18n/strings.js';
 import { FirstPersonControls } from './controls.js';
 import { detectDevice } from './device.js';
 import { buildPeriodRoom } from './room.js';
@@ -55,6 +58,8 @@ export class GalleryEngine {
     this.joystickKnob = null;
     this.joystickPointerId = null;
     this.joystickRect = null;
+    this.manifest = null;
+    this.langToggle = null;
     this.pixelRatioLadder = [DESKTOP_PIXEL_RATIO_CAP];
     this.pixelRatioIndex = 0;
     this.frameSamples = [];
@@ -80,22 +85,28 @@ export class GalleryEngine {
     this.setupQualityLadder();
     this.el = document.createElement('div');
     this.el.className = this.isTouch ? 'gallery-root is-touch' : 'gallery-root';
+    // 文案一律留空、由 applyHudStrings() 填：这样 HUD 文本只有一个写入口，语言切换直接复用。
     this.el.innerHTML = `
       <div class="gallery-canvas"></div>
       <div class="gallery-hud">
-        <button class="secondary-button gallery-back" type="button">返回时间轴</button>
+        <div class="gallery-hud-left">
+          <button class="secondary-button gallery-back" type="button"></button>
+        </div>
         <div class="gallery-period"></div>
-        <div class="gallery-controls-hint">${this.isTouch
-          ? '拖动旋转视角 · 点击画作查看详情'
-          : 'WASD / 方向键移动 · 鼠标旋转 · E 查看 · Esc 退出'}</div>
+        <div class="gallery-controls-hint"></div>
       </div>
       <div class="pointer-hint">
-        <strong>点击画面进入第一人称</strong>
-        <span>A / ← 向左 · D / → 向右</span>
+        <strong></strong>
+        <span></span>
       </div>
     `;
     this.container.appendChild(this.el);
     this.el.querySelector('.gallery-back').addEventListener('click', () => this.onBack());
+
+    // 展厅内的常驻语言切换器（欢迎页那个是必需项，这里是同一控件的紧凑变体）。
+    this.langToggle = createLanguageToggle({ variant: 'compact' });
+    this.el.querySelector('.gallery-hud-left').appendChild(this.langToggle.element);
+    this.applyHudStrings();
 
     const canvasHost = this.el.querySelector('.gallery-canvas');
     this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
@@ -150,6 +161,44 @@ export class GalleryEngine {
     this.renderer.domElement.addEventListener('pointercancel', this.onCanvasPointerCancel);
     window.addEventListener('resize', this.onResize);
     this.initialized = true;
+  }
+
+  // HUD 文案的唯一定义处（back / 操作提示 / 指针提示 / 摇杆说明 + 切换器自身）。
+  applyHudStrings() {
+    if (!this.el) return;
+    this.el.setAttribute('aria-label', t('gallery.aria'));
+    this.el.querySelector('.gallery-back').textContent = t('gallery.back');
+    this.el.querySelector('.gallery-controls-hint').textContent = this.isTouch
+      ? t('gallery.hintTouch')
+      : t('gallery.hintDesktop');
+    this.el.querySelector('.pointer-hint strong').textContent = t('gallery.pointerHintTitle');
+    this.el.querySelector('.pointer-hint span').textContent = t('gallery.pointerHintKeys');
+    const caption = this.el.querySelector('.touch-joystick-caption');
+    if (caption) caption.textContent = t('gallery.joystickCaption');
+    this.langToggle?.sync();
+  }
+
+  applyPeriodLabel() {
+    if (!this.el) return;
+    const periodEl = this.el.querySelector('.gallery-period');
+    const period = this.manifest?.periods?.find((item) => item.id === this.currentPeriodId);
+    periodEl.textContent = period ? `${pick(period, 'name')} · ${pick(period, 'range')}` : '';
+  }
+
+  applyLabelText(entry) {
+    entry.titleEl.textContent = pick(entry.work, 'title');
+    entry.artistEl.textContent = entry.artist
+      ? pick(entry.artist, 'name', t('gallery.unknownArtist'))
+      : t('gallery.unknownArtist');
+  }
+
+  // 语言切换：只重刷 DOM/HUD 与 CSS2D 标注文本。
+  // 刻意不重建 renderer、不重载贴图、不动场景图——3D 场景保持连续。
+  refreshLanguage() {
+    if (!this.el) return;
+    this.applyHudStrings();
+    this.applyPeriodLabel();
+    for (const entry of this.labelObjects) this.applyLabelText(entry);
   }
 
   // Single capability decision for every touch/low-power quality knob: pixel ratio,
@@ -214,20 +263,19 @@ export class GalleryEngine {
 
   setData(manifest, periodId) {
     if (!this.initialized) return;
+    this.manifest = manifest;
     this.setRoom(periodId);
     this.clearArtGroup();
     this.artGroup = new THREE.Group();
     this.artGroup.name = 'artwork-group';
     this.scene.add(this.artGroup);
 
-    const period = manifest.periods.find((item) => item.id === periodId);
     const works = manifest.artworks.filter((item) => item.periodId === periodId);
     this.currentPeriodId = periodId;
     this.canvasMeshes = [];
     this.labelObjects = [];
 
-    const periodEl = this.el.querySelector('.gallery-period');
-    periodEl.textContent = period ? `${period.name} · ${period.range}` : '';
+    this.applyPeriodLabel();
 
     works.forEach((work, index) => {
       const frameGroup = this.createFrame(work, works, index, manifest.artists);
@@ -274,7 +322,8 @@ export class GalleryEngine {
   createFrame(work, works, index, artists) {
     const group = new THREE.Group();
     const { width, height } = this.getArtworkDisplaySize(work, works);
-    const fallback = makeFallbackTexture(work.title);
+    // 兜底贴图上的画名按当前语言生成；语言切换不重建贴图（正式贴图已覆盖绝大多数场合）。
+    const fallback = makeFallbackTexture(pick(work, 'title'));
     const paintMaterial = new THREE.MeshLambertMaterial({
       map: fallback,
       color: 0xffffff,
@@ -354,13 +403,13 @@ export class GalleryEngine {
     const labelElement = document.createElement('div');
     labelElement.className = 'artwork-label';
     const labelTitle = document.createElement('strong');
-    labelTitle.textContent = work.title;
     const labelArtist = document.createElement('span');
-    labelArtist.textContent = artist ? artist.name : '佚名';
     labelElement.append(labelTitle, labelArtist);
     const label = new CSS2DObject(labelElement);
     label.position.set(0, -height / 2 - 0.34, Math.max(0.08, outerDepth / 2 + 0.08));
-    this.labelObjects.push({ id: work.id, label });
+    const labelEntry = { id: work.id, label, titleEl: labelTitle, artistEl: labelArtist, work, artist };
+    this.applyLabelText(labelEntry);
+    this.labelObjects.push(labelEntry);
 
     const frameParts = [backing, outer];
     if (inner) frameParts.push(inner);
@@ -814,7 +863,7 @@ export class GalleryEngine {
         <div class="touch-joystick-ring"></div>
         <div class="touch-joystick-knob"></div>
       </div>
-      <div class="touch-joystick-caption">按住摇杆移动</div>
+      <div class="touch-joystick-caption">${t('gallery.joystickCaption')}</div>
     `;
     this.el.appendChild(wrapper);
     this.touchControls = wrapper;
@@ -951,15 +1000,106 @@ export class GalleryEngine {
     this.updateLabelOcclusion();
     if (this.composer) this.composer.render();
     if (this.labelRenderer) this.labelRenderer.render(this.scene, this.camera);
+    // 去压盖必须在 CSS2DRenderer 渲染之后：渲染器才把标签摆到本帧的屏幕位置，
+    // 若提前量测，读到的是上一帧坐标，判定会在两帧之间来回摆动（实测单块标签
+    // 逐帧切换多达 10 次）。
+    this.resolveLabelCollisions();
     this.trackFrameTime(delta);
   };
 
   updateLabelOcclusion() {
     if (!this.labelObjects.length) return;
     const occlusion = new Map(this.getArtworkOcclusion().map((item) => [item.id, item.occluded]));
+    // 时间滞回：遮挡判定是逐帧射线检测，相机缓慢平移时射线会掠过柱子/墙缘，
+    // 使画作在「被遮挡 / 未被遮挡」之间逐帧翻转（实测单块标签 81 帧内抖动 13 次，
+    // 且该抖动与本文件的标签排版逻辑无关——关掉去压盖后抖动依旧）。
+    // 要求连续若干帧都被判定为遮挡才隐藏，消除边缘掠过造成的单帧闪烁；
+    // 恢复可见立即生效，避免说明牌长时间不出现。
+    const HIDE_AFTER_FRAMES = 6;
+    if (!this.labelOccludedStreak) this.labelOccludedStreak = new Map();
     for (const item of this.labelObjects) {
-      item.label.element.style.visibility = occlusion.get(item.id) ? 'hidden' : 'visible';
+      const occluded = occlusion.get(item.id) === true;
+      const streak = occluded ? (this.labelOccludedStreak.get(item.id) || 0) + 1 : 0;
+      this.labelOccludedStreak.set(item.id, streak);
+      const hidden = occluded && streak >= HIDE_AFTER_FRAMES;
+      item.label.element.style.visibility = hidden ? 'hidden' : 'visible';
     }
+  }
+
+  // 标签互相压盖的消解。
+  //
+  // 墙上标签是 CSS2D：尺寸由 CSS 决定、位置由画作投影决定，两者互不知情。
+  // 同一面墙的画作在屏幕上靠得近时标签会盖住彼此文字；实测中文最长 290px、
+  // 英文最长 477px，英文更重（6 对压盖，最大 154x34px 真的遮字）。
+  //
+  // 做法：按「离相机近的优先」贪心保留，重叠则隐藏较远的那块。走近某幅画时
+  // 它附近的标签自然变少，标题就显出来——符合展厅里走近才看清说明牌的直觉。
+  //
+  // 双阈值滞回（关键）：重叠判定若用单一阈值，标签会在临界点随相机连续移动
+  // 反复进出，实测单块标签在慢速平移中切换 10 次以上、出现单帧抖动。这里用
+  // 「进入需完全让开、退出需明显压住」的非对称阈值，中间留出死区保持原状。
+  resolveLabelCollisions() {
+    if (this.labelObjects.length < 2) return;
+    // 非对称滞回：
+    //   已经可见的标签，要被压住超过 EXIT_PX 才让位；
+    //   已经隐藏的标签，要与所有已保留标签拉开 REENTER_PX 以上的净空才恢复。
+    // 二者之间是死区，保持上一帧状态。若「恢复」门槛设得小（曾试 3px），
+    // 隐藏块中间会冒出单帧可见的闪光；实测把它改成要求净空后消失。
+    const EXIT_PX = 10;
+    const REENTER_PX = 8;
+    const BIAS = 0.8; // 世界单位：上一帧保留者享有微弱优先，抑制排序抖动
+    if (!this.labelKeptIds) this.labelKeptIds = new Set();
+
+    const candidates = [];
+    const worldPosition = new THREE.Vector3();
+    for (const item of this.labelObjects) {
+      const element = item.label.element;
+      if (element.style.visibility === 'hidden') continue;
+      item.label.getWorldPosition(worldPosition);
+      const distance = worldPosition.distanceTo(this.camera.position);
+      const wasKept = this.labelKeptIds.has(item.id);
+      candidates.push({ element, id: item.id, wasKept, effective: wasKept ? distance - BIAS : distance });
+    }
+    if (candidates.length < 2) {
+      this.labelKeptIds = new Set(candidates.map((c) => c.id));
+      return;
+    }
+
+    candidates.sort((a, b) => a.effective - b.effective);
+
+    const keptRects = [];
+    const keptIds = new Set();
+    for (const candidate of candidates) {
+      const rect = candidate.element.getBoundingClientRect();
+      // 尚未完成布局（0 尺寸）时不做判定，避免误隐藏
+      if (rect.width === 0 && rect.height === 0) {
+        keptRects.push(rect);
+        keptIds.add(candidate.id);
+        continue;
+      }
+      // 与已保留标签的关系：deepest = 最大穿透深度；separation = 最大净空（负值表示有重叠）
+      let deepest = 0;
+      let separation = Number.POSITIVE_INFINITY;
+      for (const other of keptRects) {
+        const overlapW = Math.min(rect.right, other.right) - Math.max(rect.left, other.left);
+        const overlapH = Math.min(rect.bottom, other.bottom) - Math.max(rect.top, other.top);
+        if (overlapW > 0 && overlapH > 0) {
+          deepest = Math.max(deepest, Math.min(overlapW, overlapH));
+        } else {
+          // 未重叠：两轴各自需要让开的距离，取较大者作为净空
+          separation = Math.min(separation, Math.max(-overlapW, -overlapH));
+        }
+      }
+      const collides = candidate.wasKept
+        ? deepest > EXIT_PX
+        : (deepest > 0 || separation < REENTER_PX);
+      candidate.element.style.visibility = collides ? 'hidden' : 'visible';
+      if (!collides) {
+        keptRects.push(rect);
+        keptIds.add(candidate.id);
+      }
+    }
+    this.labelKeptIds = keptIds;
   }
 
   dispose() {
@@ -985,6 +1125,8 @@ export class GalleryEngine {
     this.disposeTouchControls();
     this.frameSamples = [];
     this.touchGesture = null;
+    this.langToggle = null;
+    this.manifest = null;
     if (this.el) this.el.remove();
     this.el = null;
   }

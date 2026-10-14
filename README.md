@@ -1,12 +1,25 @@
-# 时光画廊
+# 时光画廊 · Time Gallery
 
 《时光画廊》是一款纯浏览器单机运行的艺术史科普游戏。它参考 William Fleming 与 Mary Warner Marien 的《Arts and Ideas》宏观脉络，将艺术形式背后的意识形态、社会背景与时代精神组织成 12 个艺术时期，以第一人称 3D 展厅完成浏览。
+
+界面与全部内容（时期名称与简介、96 幅画作的标题与科普简释、画家名与国籍、年份）
+均提供**中英双语**，可在欢迎页（进入界面）一键切换，**默认英文**。
+英文内容按同等信息量重写，非逐字直译。
 
 当前 v2 内容规模：
 
 - 12 个艺术时期
 - 96 幅画作，每时期 8 幅
 - manifest 收录 73 位画家条目
+- 双语：中文原文 + 英文副本（每个中文字段都有对应的 `*En` 字段）
+
+## 语言切换
+
+- 切换键位于**欢迎页**（进入界面）文案列内；进入展厅后，同一控件以紧凑样式常驻左上角 HUD。
+- 选择保存在 `localStorage["timegallery.lang"]`，刷新后保持。
+- **首次访问默认英文**（未存过选择时）。
+- 支持 `?lang=en` / `?lang=zh` 查询参数直达某种语言，优先级高于本地存储——便于分享链接与自动化测试。
+- 切换语言只重刷 DOM 文案与 3D 场景中的说明牌文字，**不重建 WebGL 渲染器、不重载贴图**，展厅保持连续。
 
 ## 本地运行
 
@@ -66,7 +79,11 @@ pnpm preview
 
 - `tools/generate_manifest.py`：从 `fetch_assets.py` 的曲目表重建 `manifest.json`，输出相对路径与缩略图字段。
 - `tools/optimize_assets.py`：压缩 `public/assets/art/` 原图并生成 `public/assets/thumb/` 缩略图。
-- `tools/verify_assets.py`：校验清单与图片一一对应、路径为相对路径、宽高比未漂移。
+- `tools/verify_assets.py`：资产与双语完整性门禁（46 项）：清单与图片一一对应、路径为相对路径、
+  宽高比未漂移、每个 `*En` 字段非空且不含汉字、英文简释不是中文的复制、默认语言为英文。
+- `tools/apply_i18n.py`：把 `tools/i18n-content/` 下的英文内容合并进 `manifest.json`（幂等），
+  并按规则生成 `yearEn`（`约`→`c.`、`公元前`→`BCE`、区间用 en dash）。
+- `tools/i18n-content/en-meta.json`、`en-artworks.json`：英文内容的单一真源（时期、国籍映射、96 段简释）。
 - `tools/smoke.mjs`：桌面端端到端验收（12 展厅、指针锁定、E/Esc、返回时间轴）。
 - `tools/smoke-mobile.mjs`：移动端端到端验收（真实触摸事件、轻点开详情、拖动不误触、零外部请求）。
 - `tools/touch-check.mjs`：桌面与触摸两种能力下的对照回归（含低功耗渲染分支断言）。
@@ -132,14 +149,18 @@ public/favicon.svg
 public/assets/art/          # 本地画作图片
 public/assets/thumb/        # 时间轴缩略图
 src/data/artworks.js        # manifest 数据入口
+src/i18n/                   # 双语：语言状态、文案目录、字段取值回退、切换控件
 src/three/                  # Three.js 展厅、控制、材质、后处理、设备能力判定
 src/ui/                     # 欢迎页、时间轴、详情面板
 src/main.js                 # 应用流程装配
 src/styles.css              # 全局样式与动画
 tools/fetch_assets.py       # 构建期资产下载与清单生成工具
 tools/optimize_assets.py    # 原图压缩与缩略图生成
+tools/apply_i18n.py         # 合并英文内容到 manifest.json
+tools/i18n-content/         # 英文内容真源（时期/国籍/96 段简释）
 tools/inline_offline.py     # 离线目录内联为自包含 HTML
 tools/build_single_file.py  # 离线单文件版打包
+tools/verify_assets.py      # 资产与双语门禁（46 项）
 tools/smoke.mjs             # 桌面端端到端验收
 tools/smoke-mobile.mjs      # 移动端端到端验收
 tools/touch-check.mjs       # 桌面/触摸能力对照回归
@@ -173,7 +194,27 @@ tools/touch-check.mjs       # 桌面/触摸能力对照回归
 - 子路径下缩略图与画作贴图均无 404。
 - 图像载荷：原图 86.2 MB → 37.2 MB，时间轴缩略图 37.5 MB → 0.62 MB。
 
+双语验收（桌面 1440×900 与移动 390×844 各 22 项，均退出码 0）：
+
+- 清空存储后 `<html lang>=en`、`document.title=Time Gallery`，首屏即英文。
+- 英文模式下欢迎页／时间轴／展厅 HUD／画作详情面板的已渲染文本中，**汉字数均为 0**；
+  中文模式下四屏均正常显示中文。
+- 欢迎页切换键点击即时生效；无参数 URL 下刷新后中／英各自保持；双向均可持久化。
+- 切换语言前后 canvas 为同一元素（WebGL 渲染器未重建）。
+
+资产与双语门禁 `tools/verify_assets.py`：**46 项全部通过**，含 11 项双语完整性检查
+（`*En` 字段零汉字、字段覆盖率 12/73/96、默认语言为 en、英文简释非中文复制）。
+
+墙上说明牌的压盖问题（英文标题更长而加剧）：改造前实测英文 6 对压盖（最大 154×34 px 真的遮字）、
+中文 4 对；加宽高上限并加入「近距离优先保留 + 非对称滞回」的去压盖后，中英各为 **0 对**，
+仍有 68/72 块可见。另经独立视觉核验（逐张读图）确认四张展厅截图中无牌间遮挡、无牌内文字裁切。
+
+一处**语言无关的既有现象**（非本次引入，未修）：少数说明牌会落在视口左右边缘之外被取景截断，
+中英完全一致（72 块中 36 块越界，两种语言相同），源于 CSS2DRenderer 对侧墙／背面对象的投影定位。
+
 离线单文件验收（`file://` 直接打开 `release/时光画廊-离线单文件版.html`）：
 
 - 桌面与移动视口下流程闭环均通过，控制台错误 0，失败请求 0。
+- 离线单文件与离线目录各 13 项双语断言通过：静态模板即 `<html lang="en">`／`<title>Time Gallery</title>`，
+  默认英文，可在包内切到中文。
 - 单文件体积约 33 MB，含 96 幅内联画作与 96 幅内联缩略图。

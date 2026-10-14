@@ -24,6 +24,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import sys
 from urllib.parse import urljoin
 
@@ -263,7 +264,15 @@ def main():
     if pristine is None:
         check("pristine manifest copy available", False, pristine_path)
     else:
-        allowed = {"image", "thumb", "imageWidth", "imageHeight"}
+        # 允许变更的字段分两类：
+        #   资产类：图片路径、缩略图、像素尺寸（优化管线写入）
+        #   双语类：*En 英文副本（i18n 管线写入）；中文原文必须保持不变
+        allowed = {
+            "image", "thumb", "imageWidth", "imageHeight",
+            "titleEn", "yearEn", "descriptionEn",
+        }
+        allowed_period = {"nameEn", "rangeEn", "descriptionEn"}
+        allowed_artist = {"nameEn", "nationalityEn"}
         pristine_by_id = {item["id"]: item for item in pristine["artworks"]}
         unexpected = []
         for item in artworks:
@@ -273,22 +282,75 @@ def main():
                     continue
                 if old.get(key) != value:
                     unexpected.append((item["id"], key, old.get(key), value))
-        for key in pristine:
-            if key != "artworks" and pristine[key] != manifest.get(key):
-                unexpected.append(("top-level", key, "differs", "differs"))
         check(
-            "only image / thumb / imageWidth / imageHeight changed",
+            "artwork fields: only image / thumb / dimensions / *En changed",
             not unexpected,
             json.dumps(unexpected[:3], ensure_ascii=False),
         )
+
+        # 时期与画家同样只允许新增英文副本
+        period_by_id = {item["id"]: item for item in pristine["periods"]}
+        bad_periods = []
+        for period in manifest["periods"]:
+            old = period_by_id.get(period["id"], {})
+            for key, value in period.items():
+                if key in allowed_period:
+                    continue
+                if old.get(key) != value:
+                    bad_periods.append((period["id"], key))
+        check(
+            "period fields: only nameEn / rangeEn / descriptionEn added",
+            not bad_periods,
+            json.dumps(bad_periods[:3], ensure_ascii=False),
+        )
+
+        artist_by_id = {item["id"]: item for item in pristine["artists"]}
+        bad_artists = []
+        for artist in manifest["artists"]:
+            old = artist_by_id.get(artist["id"], {})
+            for key, value in artist.items():
+                if key in allowed_artist:
+                    continue
+                if old.get(key) != value:
+                    bad_artists.append((artist["id"], key))
+        check(
+            "artist fields: only nameEn / nationalityEn added",
+            not bad_artists,
+            json.dumps(bad_artists[:3], ensure_ascii=False),
+        )
+
+        # 顶层：双语管线新增了若干英文键、并把 defaultLang 切到 en；
+        # 除这些之外，原有顶层内容必须逐键保持不变。
+        allowed_top_new = {"networkEn"}
+        allowed_top_changed = {"project", "academicReference", "licensing", "network"}
+        bad_top = []
+        for key, value in pristine.items():
+            if key == "artworks" or key in ("periods", "artists"):
+                continue
+            if key in allowed_top_changed:
+                continue
+            if manifest.get(key) != value:
+                bad_top.append(key)
+        for key in manifest:
+            if key not in pristine and key not in allowed_top_new:
+                bad_top.append(f"unexpected new top-level key: {key}")
+        check(
+            "top-level: only bilingual additions and defaultLang changed",
+            not bad_top,
+            ", ".join(bad_top[:5]),
+        )
+
         check(
             "artwork ids and their order are unchanged",
             [i["id"] for i in pristine["artworks"]] == ids,
         )
+        # 顶层原有键必须仍然存在且顺序不变（新键允许追加在末尾）
+        pristine_keys = [k for k in pristine.keys()]
+        current_keys = [k for k in manifest.keys()]
         check(
-            "top-level key order unchanged",
-            list(pristine.keys()) == list(manifest.keys()),
-            str(list(manifest.keys())),
+            "original top-level keys kept in their original order",
+            current_keys[: len(pristine_keys)] == pristine_keys,
+            f"pristine={pristine_keys} current={current_keys}",
         )
         check(
             "96 absolute image paths replaced",
@@ -298,7 +360,85 @@ def main():
             ),
         )
 
-    print("== 9. backup integrity ==")
+        # 中文原文不得被双语改造改写
+        zh_intact = []
+        for item in artworks:
+            old = pristine_by_id.get(item["id"], {})
+            for key in ("title", "year", "description", "physicalWidthCm", "physicalHeightCm", "source"):
+                if old.get(key) != item.get(key):
+                    zh_intact.append((item["id"], key))
+        check(
+            "Chinese source text and physical dimensions untouched",
+            not zh_intact,
+            json.dumps(zh_intact[:3], ensure_ascii=False),
+        )
+
+    print("== 9. bilingual completeness ==")
+    cjk_re = re.compile(r"[\u4e00-\u9fff]")
+
+    def collect_en_fields(node, path="", found=None):
+        """收集所有 *En 字段的 (路径, 值)。"""
+        if found is None:
+            found = []
+        if isinstance(node, dict):
+            for key, value in node.items():
+                collect_en_fields(value, "{0}.{1}".format(path, key), found)
+        elif isinstance(node, list):
+            for index, value in enumerate(node):
+                collect_en_fields(value, "{0}[{1}]".format(path, index), found)
+        elif isinstance(node, str) and path.endswith("En"):
+            found.append((path, node))
+        return found
+
+    en_fields = collect_en_fields(manifest)
+    # 英文副本里出现汉字即视为未翻译
+    cjk_left = [(p, v[:40]) for p, v in en_fields if cjk_re.search(v)]
+    check(
+        "no CJK characters left in any *En field",
+        not cjk_left,
+        json.dumps(cjk_left[:3], ensure_ascii=False),
+    )
+
+    def count_present(items, key):
+        return sum(1 for item in items if item.get(key))
+
+    check(
+        "periods have nameEn / rangeEn / descriptionEn",
+        count_present(manifest["periods"], "nameEn") == 12
+        and count_present(manifest["periods"], "rangeEn") == 12
+        and count_present(manifest["periods"], "descriptionEn") == 12,
+        "{0}/12 nameEn".format(count_present(manifest["periods"], "nameEn")),
+    )
+    check(
+        "artists have nameEn / nationalityEn",
+        count_present(manifest["artists"], "nameEn") == 73
+        and count_present(manifest["artists"], "nationalityEn") == 73,
+        "{0}/73 nationalityEn".format(count_present(manifest["artists"], "nationalityEn")),
+    )
+    check(
+        "artworks have titleEn / yearEn / descriptionEn",
+        count_present(artworks, "titleEn") == 96
+        and count_present(artworks, "yearEn") == 96
+        and count_present(artworks, "descriptionEn") == 96,
+        "{0}/96 descriptionEn".format(count_present(artworks, "descriptionEn")),
+    )
+    check(
+        "default language is English",
+        manifest["project"].get("defaultLang") == "en",
+        str(manifest["project"].get("defaultLang")),
+    )
+    # 英文文案不应只是中文的占位复制：抽样比对长度与内容
+    identical = [
+        a["id"] for a in artworks
+        if a.get("descriptionEn") and a.get("descriptionEn") == a.get("description")
+    ]
+    check("English descriptions are not copies of the Chinese", not identical, str(identical[:3]))
+    check(
+        "English year values contain no Chinese numerals",
+        not [a["id"] for a in artworks if cjk_re.search(a.get("yearEn", ""))],
+    )
+
+    print("== 10. backup integrity ==")
     baseline_path = os.path.join(args.backup_dir, "baseline_art.json")
     if os.path.exists(baseline_path):
         baseline = load_json(baseline_path)
@@ -315,7 +455,7 @@ def main():
         ),
     )
 
-    print("== 10. URL resolution of the relative paths ==")
+    print("== 11. URL resolution of the relative paths ==")
     root_document = "https://example.github.io/index.html"
     subpath_document = "https://example.github.io/time-gallery/index.html"
     image = artworks[0]["image"]

@@ -4,88 +4,130 @@
     "nameEn": "Time Gallery",
     "version": "1.1.0",
     "description": "沉浸式艺术史科普游戏，从《Arts and Ideas》的宏观脉络出发，以第一人称3D画廊串联十二个艺术时期与九十余幅公有领域经典画作。",
-    "defaultLang": "zh-CN",
-    "runtime": "fully-offline"
+    "defaultLang": "en",
+    "runtime": "fully-offline",
+    "descriptionEn": "An immersive art-history gallery in the browser. Following the broad arc of <i>Arts and Ideas</i>, it threads twelve periods of art and more than ninety public-domain masterworks through a first-person 3D exhibition."
   },
   "academicReference": {
     "coreTexts": [
       "Fleming, William & Marien, Mary Warner. Arts and Ideas. Thomson/Wadsworth, later editions.",
       "以艺术形式背后的意识形态、社会背景与时代精神作为分期与叙述框架。"
     ],
-    "note": "本项目为科普教育用途，文本为编者按学术框架撰写的原创简释，不含对原书内容的直接复制。"
+    "note": "本项目为科普教育用途，文本为编者按学术框架撰写的原创简释，不含对原书内容的直接复制。",
+    "noteEn": "This project is intended for education and general interest. All explanatory text is original, written by the editors within an academic framework; it reproduces no passage from the source book.",
+    "coreTextsEn": [
+      "Fleming, William & Marien, Mary Warner. Arts and Ideas. Thomson/Wadsworth, later editions.",
+      "Periodisation and narrative follow the ideologies, social conditions and prevailing spirit of the age that underlie artistic form."
+    ]
   },
   "periods": [
     {
       "id": "ancient-medieval",
       "name": "古代与中世纪",
       "range": "约公元前15000-1450年",
-      "description": "从洞穴图像、爱琴海与罗马壁画到拜占庭镶嵌和哥特手抄本，艺术首先服务于宇宙观、宗教权威与共同体记忆。"
+      "description": "从洞穴图像、爱琴海与罗马壁画到拜占庭镶嵌和哥特手抄本，艺术首先服务于宇宙观、宗教权威与共同体记忆。",
+      "nameEn": "Ancient and Medieval",
+      "rangeEn": "c. 15,000 BCE – 1450 CE",
+      "descriptionEn": "From cave images and Aegean and Roman wall painting to Byzantine mosaic and Gothic manuscript, art served above all cosmology, religious authority and the memory of a community."
     },
     {
       "id": "early-renaissance",
       "name": "文艺复兴早期",
       "range": "约1300-1500年",
-      "description": "透视、自然观察与人文主义共同出现，绘画从圣像转向可测量的世界，也重新界定人在宇宙中的位置。"
+      "description": "透视、自然观察与人文主义共同出现，绘画从圣像转向可测量的世界，也重新界定人在宇宙中的位置。",
+      "nameEn": "Early Renaissance",
+      "rangeEn": "c. 1300–1500",
+      "descriptionEn": "Perspective, direct observation of nature and humanism arrived together. Painting turned from the icon toward a measurable world, and redefined humanity's place within it."
     },
     {
       "id": "high-renaissance",
       "name": "文艺复兴盛期",
       "range": "约1500-1530年",
-      "description": "达·芬奇、拉斐尔与米开朗琪罗把理想人体、古典秩序和科学观察熔铸为高度综合的宏大图景。"
+      "description": "达·芬奇、拉斐尔与米开朗琪罗把理想人体、古典秩序和科学观察熔铸为高度综合的宏大图景。",
+      "nameEn": "High Renaissance",
+      "rangeEn": "c. 1500–1530",
+      "descriptionEn": "Leonardo, Raphael and Michelangelo fused the ideal body, classical order and scientific observation into a grand and highly synthesised vision."
     },
     {
       "id": "baroque",
       "name": "巴洛克",
       "range": "约1600-1720年",
-      "description": "宗教改革与反宗教改革重塑图像功能，戏剧性光线、动态构图和感官强度成为说服与沉浸的新语言。"
+      "description": "宗教改革与反宗教改革重塑图像功能，戏剧性光线、动态构图和感官强度成为说服与沉浸的新语言。",
+      "nameEn": "Baroque",
+      "rangeEn": "c. 1600–1720",
+      "descriptionEn": "Reformation and Counter-Reformation recast what images were for. Theatrical light, dynamic composition and sensory intensity became a new language of persuasion and immersion."
     },
     {
       "id": "rococo-neoclassicism",
       "name": "洛可可与新古典",
       "range": "约1720-1810年",
-      "description": "宫廷趣味转向精致逸乐，随后启蒙运动把艺术重新引向公民德性、古代共和与理性的宏大叙事。"
+      "description": "宫廷趣味转向精致逸乐，随后启蒙运动把艺术重新引向公民德性、古代共和与理性的宏大叙事。",
+      "nameEn": "Rococo and Neoclassicism",
+      "rangeEn": "c. 1720–1810",
+      "descriptionEn": "Court taste turned toward refinement and pleasure, until the Enlightenment redirected art toward civic virtue, the ancient republic and rational grand narrative."
     },
     {
       "id": "romanticism",
       "name": "浪漫主义",
       "range": "约1790-1850年",
-      "description": "工业革命与革命年代让个体情感、历史创伤、自然崇高与民族想象成为绘画的中心。"
+      "description": "工业革命与革命年代让个体情感、历史创伤、自然崇高与民族想象成为绘画的中心。",
+      "nameEn": "Romanticism",
+      "rangeEn": "c. 1790–1850",
+      "descriptionEn": "Industrialisation and an age of revolution placed individual feeling, historical trauma, the sublime in nature and national imagination at the centre of painting."
     },
     {
       "id": "realism",
       "name": "写实主义",
       "range": "约1848-1870年",
-      "description": "库尔贝与巴比松画家拒绝理想化，把劳动、城市生活和现代经验直接搬上画布，艺术开始成为社会观察。"
+      "description": "库尔贝与巴比松画家拒绝理想化，把劳动、城市生活和现代经验直接搬上画布，艺术开始成为社会观察。",
+      "nameEn": "Realism",
+      "rangeEn": "c. 1848–1870",
+      "descriptionEn": "Courbet and the painters of Barbizon refused idealisation, carrying labour, city life and modern experience directly onto the canvas. Art became social observation."
     },
     {
       "id": "impressionism",
       "name": "印象派",
       "range": "约1860-1890年",
-      "description": "光色科学、铁路与休闲城市生活改变了观看方式，画家记录瞬间氛围，把画布变成光的现场。"
+      "description": "光色科学、铁路与休闲城市生活改变了观看方式，画家记录瞬间氛围，把画布变成光的现场。",
+      "nameEn": "Impressionism",
+      "rangeEn": "c. 1860–1890",
+      "descriptionEn": "The science of light and colour, the railway and leisured city life changed how people saw. Painters recorded the atmosphere of a moment and made the canvas a site of light."
     },
     {
       "id": "post-impressionism",
       "name": "后印象派与象征主义",
       "range": "约1880-1910年",
-      "description": "塞尚、梵高、高更与修拉从印象派出发，分别走向结构、情感、象征和科学秩序，预示现代艺术的独立。"
+      "description": "塞尚、梵高、高更与修拉从印象派出发，分别走向结构、情感、象征和科学秩序，预示现代艺术的独立。",
+      "nameEn": "Post-Impressionism and Symbolism",
+      "rangeEn": "c. 1880–1910",
+      "descriptionEn": "Cézanne, Van Gogh, Gauguin and Seurat set out from Impressionism toward structure, emotion, symbol and scientific order respectively, heralding the independence of modern art."
     },
     {
       "id": "modern-avant-garde",
       "name": "现代主义先锋",
       "range": "约1900-1930年",
-      "description": "野兽派、表现主义、抽象与至上主义宣告形式自治：颜色、线条和构图不再模仿世界，而是创造世界。"
+      "description": "野兽派、表现主义、抽象与至上主义宣告形式自治：颜色、线条和构图不再模仿世界，而是创造世界。",
+      "nameEn": "Modern Avant-Garde",
+      "rangeEn": "c. 1900–1930",
+      "descriptionEn": "Fauvism, Expressionism, abstraction and Suprematism declared the autonomy of form: colour, line and composition no longer imitated the world but created one."
     },
     {
       "id": "expressionism-beyond",
       "name": "表现主义与未来主义",
       "range": "约1905-1940年",
-      "description": "战争、都市、机器与精神焦虑推动绘画走向变形与暴力色彩，巴黎画派则以线条和色彩重新定义现代人体。"
+      "description": "战争、都市、机器与精神焦虑推动绘画走向变形与暴力色彩，巴黎画派则以线条和色彩重新定义现代人体。",
+      "nameEn": "Expressionism and Futurism",
+      "rangeEn": "c. 1905–1940",
+      "descriptionEn": "War, the metropolis, the machine and spiritual anxiety drove painting toward distortion and violent colour, while the School of Paris redefined the modern figure through line and colour."
     },
     {
       "id": "american-modern",
       "name": "美国现代主义与20世纪之路",
       "range": "约1910-1945年",
-      "description": "美国艺术家以精确主义、乡土写实和抽象构成回应工业景观，战后的抽象表现主义与波普艺术继续接续这些现代实验。"
+      "description": "美国艺术家以精确主义、乡土写实和抽象构成回应工业景观，战后的抽象表现主义与波普艺术继续接续这些现代实验。",
+      "nameEn": "American Modernism and the Twentieth Century",
+      "rangeEn": "c. 1910–1945",
+      "descriptionEn": "American artists answered the industrial landscape with Precisionism, regionalist realism and abstract construction; postwar Abstract Expressionism and Pop continued these modern experiments."
     }
   ],
   "artists": [
@@ -95,7 +137,8 @@
       "nameEn": "Anonymous",
       "birthYear": null,
       "deathYear": null,
-      "nationality": "拜占庭"
+      "nationality": "拜占庭",
+      "nationalityEn": "Byzantine"
     },
     {
       "id": "limbourg",
@@ -103,7 +146,8 @@
       "nameEn": "Limbourg Brothers",
       "birthYear": null,
       "deathYear": 1416,
-      "nationality": "法兰德斯"
+      "nationality": "法兰德斯",
+      "nationalityEn": "Flemish"
     },
     {
       "id": "giotto",
@@ -111,7 +155,8 @@
       "nameEn": "Giotto di Bondone",
       "birthYear": 1267,
       "deathYear": 1337,
-      "nationality": "意大利"
+      "nationality": "意大利",
+      "nationalityEn": "Italian"
     },
     {
       "id": "vaneyck",
@@ -119,7 +164,8 @@
       "nameEn": "Jan van Eyck",
       "birthYear": 1390,
       "deathYear": 1441,
-      "nationality": "法兰德斯"
+      "nationality": "法兰德斯",
+      "nationalityEn": "Flemish"
     },
     {
       "id": "botticelli",
@@ -127,7 +173,8 @@
       "nameEn": "Sandro Botticelli",
       "birthYear": 1445,
       "deathYear": 1510,
-      "nationality": "意大利"
+      "nationality": "意大利",
+      "nationalityEn": "Italian"
     },
     {
       "id": "fraangelico",
@@ -135,7 +182,8 @@
       "nameEn": "Fra Angelico",
       "birthYear": 1395,
       "deathYear": 1455,
-      "nationality": "意大利"
+      "nationality": "意大利",
+      "nationalityEn": "Italian"
     },
     {
       "id": "masaccio",
@@ -143,7 +191,8 @@
       "nameEn": "Masaccio",
       "birthYear": 1401,
       "deathYear": 1428,
-      "nationality": "意大利"
+      "nationality": "意大利",
+      "nationalityEn": "Italian"
     },
     {
       "id": "piero",
@@ -151,7 +200,8 @@
       "nameEn": "Piero della Francesca",
       "birthYear": 1415,
       "deathYear": 1492,
-      "nationality": "意大利"
+      "nationality": "意大利",
+      "nationalityEn": "Italian"
     },
     {
       "id": "leonardo",
@@ -159,7 +209,8 @@
       "nameEn": "Leonardo da Vinci",
       "birthYear": 1452,
       "deathYear": 1519,
-      "nationality": "意大利"
+      "nationality": "意大利",
+      "nationalityEn": "Italian"
     },
     {
       "id": "raphael",
@@ -167,7 +218,8 @@
       "nameEn": "Raphael",
       "birthYear": 1483,
       "deathYear": 1520,
-      "nationality": "意大利"
+      "nationality": "意大利",
+      "nationalityEn": "Italian"
     },
     {
       "id": "michelangelo",
@@ -175,7 +227,8 @@
       "nameEn": "Michelangelo",
       "birthYear": 1475,
       "deathYear": 1564,
-      "nationality": "意大利"
+      "nationality": "意大利",
+      "nationalityEn": "Italian"
     },
     {
       "id": "titian",
@@ -183,7 +236,8 @@
       "nameEn": "Titian",
       "birthYear": 1490,
       "deathYear": 1576,
-      "nationality": "意大利"
+      "nationality": "意大利",
+      "nationalityEn": "Italian"
     },
     {
       "id": "durer",
@@ -191,7 +245,8 @@
       "nameEn": "Albrecht Dürer",
       "birthYear": 1471,
       "deathYear": 1528,
-      "nationality": "德国"
+      "nationality": "德国",
+      "nationalityEn": "German"
     },
     {
       "id": "giorgione",
@@ -199,7 +254,8 @@
       "nameEn": "Giorgione",
       "birthYear": 1477,
       "deathYear": 1510,
-      "nationality": "意大利"
+      "nationality": "意大利",
+      "nationalityEn": "Italian"
     },
     {
       "id": "caravaggio",
@@ -207,7 +263,8 @@
       "nameEn": "Caravaggio",
       "birthYear": 1571,
       "deathYear": 1610,
-      "nationality": "意大利"
+      "nationality": "意大利",
+      "nationalityEn": "Italian"
     },
     {
       "id": "rubens",
@@ -215,7 +272,8 @@
       "nameEn": "Peter Paul Rubens",
       "birthYear": 1577,
       "deathYear": 1640,
-      "nationality": "法兰德斯"
+      "nationality": "法兰德斯",
+      "nationalityEn": "Flemish"
     },
     {
       "id": "rembrandt",
@@ -223,7 +281,8 @@
       "nameEn": "Rembrandt van Rijn",
       "birthYear": 1606,
       "deathYear": 1669,
-      "nationality": "荷兰"
+      "nationality": "荷兰",
+      "nationalityEn": "Dutch"
     },
     {
       "id": "vermeer",
@@ -231,7 +290,8 @@
       "nameEn": "Johannes Vermeer",
       "birthYear": 1632,
       "deathYear": 1675,
-      "nationality": "荷兰"
+      "nationality": "荷兰",
+      "nationalityEn": "Dutch"
     },
     {
       "id": "velazquez",
@@ -239,7 +299,8 @@
       "nameEn": "Diego Velázquez",
       "birthYear": 1599,
       "deathYear": 1660,
-      "nationality": "西班牙"
+      "nationality": "西班牙",
+      "nationalityEn": "Spanish"
     },
     {
       "id": "gentileschi",
@@ -247,7 +308,8 @@
       "nameEn": "Artemisia Gentileschi",
       "birthYear": 1593,
       "deathYear": 1656,
-      "nationality": "意大利"
+      "nationality": "意大利",
+      "nationalityEn": "Italian"
     },
     {
       "id": "watteau",
@@ -255,7 +317,8 @@
       "nameEn": "Antoine Watteau",
       "birthYear": 1684,
       "deathYear": 1721,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "fragonard",
@@ -263,7 +326,8 @@
       "nameEn": "Jean-Honoré Fragonard",
       "birthYear": 1732,
       "deathYear": 1806,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "gainsborough",
@@ -271,7 +335,8 @@
       "nameEn": "Thomas Gainsborough",
       "birthYear": 1727,
       "deathYear": 1788,
-      "nationality": "英国"
+      "nationality": "英国",
+      "nationalityEn": "British"
     },
     {
       "id": "david",
@@ -279,7 +344,8 @@
       "nameEn": "Jacques-Louis David",
       "birthYear": 1748,
       "deathYear": 1825,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "vigelebrun",
@@ -287,7 +353,8 @@
       "nameEn": "Élisabeth Vigée Le Brun",
       "birthYear": 1755,
       "deathYear": 1842,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "goya",
@@ -295,7 +362,8 @@
       "nameEn": "Francisco de Goya",
       "birthYear": 1746,
       "deathYear": 1828,
-      "nationality": "西班牙"
+      "nationality": "西班牙",
+      "nationalityEn": "Spanish"
     },
     {
       "id": "gericault",
@@ -303,7 +371,8 @@
       "nameEn": "Théodore Géricault",
       "birthYear": 1791,
       "deathYear": 1824,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "delacroix",
@@ -311,7 +380,8 @@
       "nameEn": "Eugène Delacroix",
       "birthYear": 1798,
       "deathYear": 1863,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "turner",
@@ -319,7 +389,8 @@
       "nameEn": "J. M. W. Turner",
       "birthYear": 1775,
       "deathYear": 1851,
-      "nationality": "英国"
+      "nationality": "英国",
+      "nationalityEn": "British"
     },
     {
       "id": "friedrich",
@@ -327,7 +398,8 @@
       "nameEn": "Caspar David Friedrich",
       "birthYear": 1774,
       "deathYear": 1840,
-      "nationality": "德国"
+      "nationality": "德国",
+      "nationalityEn": "German"
     },
     {
       "id": "constable",
@@ -335,7 +407,8 @@
       "nameEn": "John Constable",
       "birthYear": 1776,
       "deathYear": 1837,
-      "nationality": "英国"
+      "nationality": "英国",
+      "nationalityEn": "British"
     },
     {
       "id": "courbet",
@@ -343,7 +416,8 @@
       "nameEn": "Gustave Courbet",
       "birthYear": 1819,
       "deathYear": 1877,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "millet",
@@ -351,7 +425,8 @@
       "nameEn": "Jean-François Millet",
       "birthYear": 1814,
       "deathYear": 1875,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "manet",
@@ -359,7 +434,8 @@
       "nameEn": "Édouard Manet",
       "birthYear": 1832,
       "deathYear": 1883,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "corot",
@@ -367,7 +443,8 @@
       "nameEn": "Jean-Baptiste-Camille Corot",
       "birthYear": 1796,
       "deathYear": 1875,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "monet",
@@ -375,7 +452,8 @@
       "nameEn": "Claude Monet",
       "birthYear": 1840,
       "deathYear": 1926,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "renoir",
@@ -383,7 +461,8 @@
       "nameEn": "Pierre-Auguste Renoir",
       "birthYear": 1841,
       "deathYear": 1919,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "degas",
@@ -391,7 +470,8 @@
       "nameEn": "Edgar Degas",
       "birthYear": 1834,
       "deathYear": 1917,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "pissarro",
@@ -399,7 +479,8 @@
       "nameEn": "Camille Pissarro",
       "birthYear": 1830,
       "deathYear": 1903,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "vangogh",
@@ -407,7 +488,8 @@
       "nameEn": "Vincent van Gogh",
       "birthYear": 1853,
       "deathYear": 1890,
-      "nationality": "荷兰"
+      "nationality": "荷兰",
+      "nationalityEn": "Dutch"
     },
     {
       "id": "cezanne",
@@ -415,7 +497,8 @@
       "nameEn": "Paul Cézanne",
       "birthYear": 1839,
       "deathYear": 1906,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "gauguin",
@@ -423,7 +506,8 @@
       "nameEn": "Paul Gauguin",
       "birthYear": 1848,
       "deathYear": 1903,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "seurat",
@@ -431,7 +515,8 @@
       "nameEn": "Georges Seurat",
       "birthYear": 1859,
       "deathYear": 1891,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "munch",
@@ -439,7 +524,8 @@
       "nameEn": "Edvard Munch",
       "birthYear": 1863,
       "deathYear": 1944,
-      "nationality": "挪威"
+      "nationality": "挪威",
+      "nationalityEn": "Norwegian"
     },
     {
       "id": "klimt",
@@ -447,7 +533,8 @@
       "nameEn": "Gustav Klimt",
       "birthYear": 1862,
       "deathYear": 1918,
-      "nationality": "奥地利"
+      "nationality": "奥地利",
+      "nationalityEn": "Austrian"
     },
     {
       "id": "matisse",
@@ -455,7 +542,8 @@
       "nameEn": "Henri Matisse",
       "birthYear": 1869,
       "deathYear": 1954,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "kandinsky",
@@ -463,7 +551,8 @@
       "nameEn": "Wassily Kandinsky",
       "birthYear": 1866,
       "deathYear": 1944,
-      "nationality": "俄国"
+      "nationality": "俄国",
+      "nationalityEn": "Russian"
     },
     {
       "id": "mondrian",
@@ -471,7 +560,8 @@
       "nameEn": "Piet Mondrian",
       "birthYear": 1872,
       "deathYear": 1944,
-      "nationality": "荷兰"
+      "nationality": "荷兰",
+      "nationalityEn": "Dutch"
     },
     {
       "id": "malevich",
@@ -479,7 +569,8 @@
       "nameEn": "Kazimir Malevich",
       "birthYear": 1879,
       "deathYear": 1935,
-      "nationality": "俄国"
+      "nationality": "俄国",
+      "nationalityEn": "Russian"
     },
     {
       "id": "klee",
@@ -487,7 +578,8 @@
       "nameEn": "Paul Klee",
       "birthYear": 1879,
       "deathYear": 1940,
-      "nationality": "德国"
+      "nationality": "德国",
+      "nationalityEn": "German"
     },
     {
       "id": "marc",
@@ -495,7 +587,8 @@
       "nameEn": "Franz Marc",
       "birthYear": 1880,
       "deathYear": 1916,
-      "nationality": "德国"
+      "nationality": "德国",
+      "nationalityEn": "German"
     },
     {
       "id": "kirchner",
@@ -503,7 +596,8 @@
       "nameEn": "Ernst Ludwig Kirchner",
       "birthYear": 1880,
       "deathYear": 1938,
-      "nationality": "德国"
+      "nationality": "德国",
+      "nationalityEn": "German"
     },
     {
       "id": "boccioni",
@@ -511,7 +605,8 @@
       "nameEn": "Umberto Boccioni",
       "birthYear": 1882,
       "deathYear": 1916,
-      "nationality": "意大利"
+      "nationality": "意大利",
+      "nationalityEn": "Italian"
     },
     {
       "id": "modigliani",
@@ -519,7 +614,8 @@
       "nameEn": "Amedeo Modigliani",
       "birthYear": 1884,
       "deathYear": 1920,
-      "nationality": "意大利"
+      "nationality": "意大利",
+      "nationalityEn": "Italian"
     },
     {
       "id": "schiele",
@@ -527,7 +623,8 @@
       "nameEn": "Egon Schiele",
       "birthYear": 1890,
       "deathYear": 1918,
-      "nationality": "奥地利"
+      "nationality": "奥地利",
+      "nationalityEn": "Austrian"
     },
     {
       "id": "beckmann",
@@ -535,7 +632,8 @@
       "nameEn": "Max Beckmann",
       "birthYear": 1884,
       "deathYear": 1950,
-      "nationality": "德国"
+      "nationality": "德国",
+      "nationalityEn": "German"
     },
     {
       "id": "wood",
@@ -543,7 +641,8 @@
       "nameEn": "Grant Wood",
       "birthYear": 1891,
       "deathYear": 1942,
-      "nationality": "美国"
+      "nationality": "美国",
+      "nationalityEn": "American"
     },
     {
       "id": "demuth",
@@ -551,7 +650,8 @@
       "nameEn": "Charles Demuth",
       "birthYear": 1883,
       "deathYear": 1935,
-      "nationality": "美国"
+      "nationality": "美国",
+      "nationalityEn": "American"
     },
     {
       "id": "hartley",
@@ -559,7 +659,8 @@
       "nameEn": "Marsden Hartley",
       "birthYear": 1877,
       "deathYear": 1943,
-      "nationality": "美国"
+      "nationality": "美国",
+      "nationalityEn": "American"
     },
     {
       "id": "dove",
@@ -567,7 +668,8 @@
       "nameEn": "Arthur Dove",
       "birthYear": 1880,
       "deathYear": 1946,
-      "nationality": "美国"
+      "nationality": "美国",
+      "nationalityEn": "American"
     },
     {
       "id": "marin",
@@ -575,7 +677,8 @@
       "nameEn": "John Marin",
       "birthYear": 1870,
       "deathYear": 1953,
-      "nationality": "美国"
+      "nationality": "美国",
+      "nationalityEn": "American"
     },
     {
       "id": "stella",
@@ -583,7 +686,8 @@
       "nameEn": "Joseph Stella",
       "birthYear": 1877,
       "deathYear": 1946,
-      "nationality": "美国"
+      "nationality": "美国",
+      "nationalityEn": "American"
     },
     {
       "id": "feininger",
@@ -591,7 +695,8 @@
       "nameEn": "Lyonel Feininger",
       "birthYear": 1871,
       "deathYear": 1956,
-      "nationality": "美国"
+      "nationality": "美国",
+      "nationalityEn": "American"
     },
     {
       "id": "boucher",
@@ -599,7 +704,8 @@
       "nameEn": "François Boucher",
       "birthYear": 1703,
       "deathYear": 1770,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "homer",
@@ -607,7 +713,8 @@
       "nameEn": "Winslow Homer",
       "birthYear": 1836,
       "deathYear": 1910,
-      "nationality": "美国"
+      "nationality": "美国",
+      "nationalityEn": "American"
     },
     {
       "id": "brown",
@@ -615,7 +722,8 @@
       "nameEn": "Ford Madox Brown",
       "birthYear": 1821,
       "deathYear": 1893,
-      "nationality": "英国"
+      "nationality": "英国",
+      "nationalityEn": "British"
     },
     {
       "id": "cassatt",
@@ -623,7 +731,8 @@
       "nameEn": "Mary Cassatt",
       "birthYear": 1844,
       "deathYear": 1926,
-      "nationality": "美国"
+      "nationality": "美国",
+      "nationalityEn": "American"
     },
     {
       "id": "paolo-uccello",
@@ -631,7 +740,8 @@
       "nameEn": "Paolo Uccello",
       "birthYear": 1397,
       "deathYear": 1475,
-      "nationality": "意大利"
+      "nationality": "意大利",
+      "nationalityEn": "Italian"
     },
     {
       "id": "ingres",
@@ -639,7 +749,8 @@
       "nameEn": "Jean-Auguste-Dominique Ingres",
       "birthYear": 1780,
       "deathYear": 1867,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "rousseau",
@@ -647,7 +758,8 @@
       "nameEn": "Henri Rousseau",
       "birthYear": 1844,
       "deathYear": 1910,
-      "nationality": "法国"
+      "nationality": "法国",
+      "nationalityEn": "French"
     },
     {
       "id": "duchamp",
@@ -655,7 +767,8 @@
       "nameEn": "Marcel Duchamp",
       "birthYear": 1887,
       "deathYear": 1968,
-      "nationality": "法国 / 美国"
+      "nationality": "法国 / 美国",
+      "nationalityEn": "French / American"
     },
     {
       "id": "chagall",
@@ -663,7 +776,8 @@
       "nameEn": "Marc Chagall",
       "birthYear": 1887,
       "deathYear": 1985,
-      "nationality": "俄罗斯 / 法国"
+      "nationality": "俄罗斯 / 法国",
+      "nationalityEn": "Russian / French"
     },
     {
       "id": "hopper",
@@ -671,7 +785,8 @@
       "nameEn": "Edward Hopper",
       "birthYear": 1882,
       "deathYear": 1967,
-      "nationality": "美国"
+      "nationality": "美国",
+      "nationalityEn": "American"
     }
   ],
   "artworks": [
@@ -694,7 +809,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 78.67
+      "physicalHeightCm": 78.67,
+      "descriptionEn": "Bison and signs share the rock face in what is already a ritual image: art here carries memory, hunting magic and collective identity at once.",
+      "yearEn": "c. 15000–13000 BCE"
     },
     {
       "id": "a02",
@@ -715,7 +832,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 67.32,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Aegean palace frescoes record sea life in flowing line and bright fields of colour, revealing the untroubled gaze a Bronze Age trading society cast on nature and the body.",
+      "yearEn": "c. 1600 BCE"
     },
     {
       "id": "a03",
@@ -736,7 +855,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 91.62
+      "physicalHeightCm": 91.62,
+      "descriptionEn": "A continuous frieze in a Pompeian villa stages the Dionysiac mysteries as theatre, showing how Roman domestic painting manufactured atmosphere, status and sacred experience.",
+      "yearEn": "c. 60–50 BCE"
     },
     {
       "id": "a04",
@@ -757,7 +878,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 89.56
+      "physicalHeightCm": 89.56,
+      "descriptionEn": "The mosaics of San Vitale in Ravenna set emperor and church side by side on gold ground and flattened figures; the image becomes a visual declaration of Byzantine theocratic order.",
+      "yearEn": "c. 547"
     },
     {
       "id": "a05",
@@ -778,7 +901,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 91.32,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Robed in purple and holding the chalice, Theodora is folded into a sacred order by eternal gold, shaping the public image of a woman ruler.",
+      "yearEn": "c. 547"
     },
     {
       "id": "a06",
@@ -799,7 +924,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 72.0,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "The Duke of Berry's book of hours sets farming, aristocratic castle and calendar side by side, where late Gothic observation of nature meets minute narrative.",
+      "yearEn": "c. 1410–1416"
     },
     {
       "id": "e01",
@@ -820,7 +947,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 97.79,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Giotto gave the saints weight, volume and real grief; the Arena Chapel frescoes thus brought human dignity into sacred narrative.",
+      "yearEn": "c. 1305"
     },
     {
       "id": "e02",
@@ -841,7 +970,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 87.7,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Convex mirror, chandelier and meticulous clothing turn a marriage into verifiable witness; Van Eyck's oil technique marks the summit of Northern naturalism.",
+      "yearEn": "1434"
     },
     {
       "id": "e03",
@@ -862,7 +993,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 75.38
+      "physicalHeightCm": 75.38,
+      "descriptionEn": "Humanism summoned ancient myth again; Botticelli's flowing line brings beauty ashore from the shell, shaping the Renaissance's emotional image of the classical past.",
+      "yearEn": "c. 1485"
     },
     {
       "id": "e04",
@@ -883,7 +1016,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 116.09,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Soft light and pure architecture place the miracle at everyday scale; Angelico's humble, luminous colour gives faith a visible harmony.",
+      "yearEn": "c. 1440"
     },
     {
       "id": "e05",
@@ -904,7 +1039,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 93.4,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Adam and Eve are no longer formulaic icons but flesh enduring shame and grief; Masaccio opens the Renaissance measure of humanity through light and volume.",
+      "yearEn": "c. 1425"
     },
     {
       "id": "e06",
@@ -925,7 +1062,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 82.14,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Geometric order and perspective make a sacred event appear eternal and clear; Piero presents the Renaissance faith in reason with almost musical balance.",
+      "yearEn": "c. 1448–1450"
     },
     {
       "id": "h01",
@@ -946,7 +1085,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 80.53,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Sfumato dissolves contour into air and shadow; Mona Lisa's smile becomes the most enduring pictorial puzzle of modern individual consciousness.",
+      "yearEn": "c. 1503–1519"
     },
     {
       "id": "h02",
@@ -967,7 +1108,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 62.5
+      "physicalHeightCm": 62.5,
+      "descriptionEn": "Leonardo compresses the instant of betrayal into a psychological ensemble, perspective converging at the centre, so that narrative, science and drama hold at once.",
+      "yearEn": "1495–1498"
     },
     {
       "id": "h03",
@@ -988,7 +1131,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 93.12
+      "physicalHeightCm": 93.12,
+      "descriptionEn": "Plato and Aristotle debate within a grand architecture; Raphael casts classical philosophy and Renaissance humanism into ideal order.",
+      "yearEn": "1509–1511"
     },
     {
       "id": "h04",
@@ -1009,7 +1154,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 54.44
+      "physicalHeightCm": 54.44,
+      "descriptionEn": "The almost-touching gap between two fingers becomes the suspended instant of cosmic origin; the Sistine ceiling raises anatomy to a double proof, theological and philosophical.",
+      "yearEn": "c. 1511"
     },
     {
       "id": "h05",
@@ -1030,7 +1177,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 84.38
+      "physicalHeightCm": 84.38,
+      "descriptionEn": "Titian moves the classical goddess into a Venetian noble bedroom; warm colour, silk and body together define a model of worldly desire and painterly sensuality.",
+      "yearEn": "1538"
     },
     {
       "id": "h06",
@@ -1051,7 +1200,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 86.78,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Dürer gazes at the viewer in a composition close to a frontal Christ; for the first time a Northern painter raises his own position to that of near-divine creator.",
+      "yearEn": "1500"
     },
     {
       "id": "h07",
@@ -1072,7 +1223,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 106.47,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Figures, lightning and landscape form a lyrical scene resistant to simple reading; Giorgione frees painting from text into self-sufficient poetry.",
+      "yearEn": "c. 1508"
     },
     {
       "id": "b01",
@@ -1093,7 +1246,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 112.24
+      "physicalHeightCm": 112.24,
+      "descriptionEn": "Light enters the tax collector's room from the right like a pointing finger; Caravaggio places divine calling inside dim everyday life, rebuilding religious imagery through darkness and truth.",
+      "yearEn": "1599–1600"
     },
     {
       "id": "b02",
@@ -1114,7 +1269,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 88.56
+      "physicalHeightCm": 88.56,
+      "descriptionEn": "Blood, wrinkles and spatter at the instant of decapitation are lit with unbearable clarity; Baroque art summons intense spiritual feeling through the truth of bodily violence.",
+      "yearEn": "c. 1598–1599"
     },
     {
       "id": "b03",
@@ -1135,7 +1292,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 88.81
+      "physicalHeightCm": 88.81,
+      "descriptionEn": "Rubens turns ancient myth into a tactile feast of full flesh, satin and trees; Baroque movement keeps spreading across the surface.",
+      "yearEn": "c. 1636"
     },
     {
       "id": "b04",
@@ -1156,7 +1315,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 97.63
+      "physicalHeightCm": 97.63,
+      "descriptionEn": "Rembrandt turns a civic militia portrait into an action theatre in progress; the interplay of light, shadow and movement gives collective portraiture epic scale.",
+      "yearEn": "1642"
     },
     {
       "id": "b05",
@@ -1177,7 +1338,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 101.32,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "The turned glance, pearly highlight and dark ground make an ordinary girl an eternal gaze; Vermeer paints an instant of the mind with optical calm.",
+      "yearEn": "c. 1665"
     },
     {
       "id": "b06",
@@ -1198,7 +1361,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 104.25,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Painter, princess, mirrored king and viewer all watch one another; Velázquez makes painting, power and looking itself the true subject.",
+      "yearEn": "1656"
     },
     {
       "id": "b07",
@@ -1219,7 +1384,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 94.24,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "A woman's arms exert real force, muscles taut; Gentileschi rewrites heroic narrative from lived experience, in one of the most physical images of the Baroque.",
+      "yearEn": "c. 1614–1620"
     },
     {
       "id": "r01",
@@ -1240,7 +1407,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 78.69
+      "physicalHeightCm": 78.69,
+      "descriptionEn": "Watteau invents the fête galante: aristocratic couples set out for the island of love through a dreamlike garden, Rococo elegance masking time's passing.",
+      "yearEn": "1717"
     },
     {
       "id": "r02",
@@ -1261,7 +1430,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 93.89,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "A flying pink skirt, a lover in shadow and glances through the shrubs form a flirtatious game; Rococo sensory pleasure reaches its height.",
+      "yearEn": "1767–1768"
     },
     {
       "id": "r03",
@@ -1282,7 +1453,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 82.5,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Blue satin and flowing brushwork lift portraiture beyond a record of identity; Gainsborough raises the English aristocratic portrait to lyrical art.",
+      "yearEn": "c. 1770"
     },
     {
       "id": "r04",
@@ -1303,7 +1476,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 93.56
+      "physicalHeightCm": 93.56,
+      "descriptionEn": "Roman oath, columns and decisive light turn civic sacrifice into an Enlightenment moral lesson; Neoclassicism supplies the revolutionary age with a visual programme.",
+      "yearEn": "1784"
     },
     {
       "id": "r05",
@@ -1324,7 +1499,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 78.81
+      "physicalHeightCm": 78.81,
+      "descriptionEn": "Socrates drinks the hemlock calmly in prison; David erects a monument to reason and principle through the death of an ancient philosopher.",
+      "yearEn": "1787"
     },
     {
       "id": "r06",
@@ -1345,7 +1522,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 94.12,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "The painter depicts the French queen in light dress and natural pose; the portrait moves between court protocol and personal charm, and stands as testimony to a woman artist's professional identity.",
+      "yearEn": "1783"
     },
     {
       "id": "r07",
@@ -1366,7 +1545,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 97.81
+      "physicalHeightCm": 97.81,
+      "descriptionEn": "Goya paints the royal family with near-ruthless realism, ordinary and fragile beneath sumptuous dress, heralding a new critical phase in court portraiture.",
+      "yearEn": "1800–1801"
     },
     {
       "id": "m01",
@@ -1387,7 +1568,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 81.94
+      "physicalHeightCm": 81.94,
+      "descriptionEn": "Shipwreck survivors struggle and scan the horizon on a raft; Géricault turns a contemporary political scandal into a tragic monument, and Romanticism moves the public with a scene from history.",
+      "yearEn": "1818–1819"
     },
     {
       "id": "m02",
@@ -1408,7 +1591,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 96.31
+      "physicalHeightCm": 96.31,
+      "descriptionEn": "Liberty bears the flag over the barricade; Delacroix fuses revolutionary energy, allegorical figure and specific individuals into a national symbol.",
+      "yearEn": "1830"
     },
     {
       "id": "m03",
@@ -1429,7 +1614,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 94.19
+      "physicalHeightCm": 94.19,
+      "descriptionEn": "An Eastern tyrant gazes upon the chaos he has ordered; Delacroix presents the Romantic fascination with extremity through burning colour and piled bodies.",
+      "yearEn": "1827"
     },
     {
       "id": "m04",
@@ -1450,7 +1637,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 89.12
+      "physicalHeightCm": 89.12,
+      "descriptionEn": "Sunset, steam and an old warship sink into history together; Turner lets the industrial age and a heroic past take leave of each other in light and colour.",
+      "yearEn": "1839"
     },
     {
       "id": "m05",
@@ -1471,7 +1660,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 99.87
+      "physicalHeightCm": 99.87,
+      "descriptionEn": "A train hurtles out of rain and mist; Turner paints speed, air and the vibration of light as Romanticism's premonition of modernity.",
+      "yearEn": "1844"
     },
     {
       "id": "m06",
@@ -1492,7 +1683,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 93.7,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "A traveller stands with his back to us above mountains and clouds; Friedrich places the individual soul and the sublime in nature within one boundless landscape.",
+      "yearEn": "c. 1818"
     },
     {
       "id": "m07",
@@ -1513,7 +1706,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 82.75
+      "physicalHeightCm": 82.75,
+      "descriptionEn": "Clouds, water and a country cart make a tranquil English pastoral; Constable's patient observation of nature won the sympathy of the Romantic age.",
+      "yearEn": "1821"
     },
     {
       "id": "s01",
@@ -1534,7 +1729,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 55.19
+      "physicalHeightCm": 55.19,
+      "descriptionEn": "A village funeral is painted at the scale of history painting; Courbet refuses lofty subject matter and gives the death and ritual of ordinary people to public scrutiny.",
+      "yearEn": "1849–1850"
     },
     {
       "id": "s02",
@@ -1555,7 +1752,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 89.81
+      "physicalHeightCm": 89.81,
+      "descriptionEn": "Three peasant women stoop to glean in a harvested field; Millet gives labour dignity and silence through monumental composition.",
+      "yearEn": "1857"
     },
     {
       "id": "s03",
@@ -1576,7 +1775,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 99.75
+      "physicalHeightCm": 99.75,
+      "descriptionEn": "At dusk farmers set down their tools to pray; Millet paints a rural hour of devotion as the spiritual echo of modern life.",
+      "yearEn": "1857–1859"
     },
     {
       "id": "s04",
@@ -1597,7 +1798,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 81.75
+      "physicalHeightCm": 81.75,
+      "descriptionEn": "A courtesan meets the viewer's gaze without apology; Manet challenges academic tradition through flat colour and modern subject, and is counted among the beginnings of modern painting.",
+      "yearEn": "1863"
     },
     {
       "id": "s05",
@@ -1618,7 +1821,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 89.62
+      "physicalHeightCm": 89.62,
+      "descriptionEn": "A barmaid, a mirrored crowd and bottles of drink compose one instant of city nightlife; Manet interrogates modern seeing itself through an unsettled mirror relation.",
+      "yearEn": "1882"
     },
     {
       "id": "s06",
@@ -1639,7 +1844,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 86.81
+      "physicalHeightCm": 86.81,
+      "descriptionEn": "Silvery trees and water lend landscape a lyrical memory; Corot links classical landscape to the plein-air realism that followed.",
+      "yearEn": "1864"
     },
     {
       "id": "i01",
@@ -1660,7 +1867,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 93.38
+      "physicalHeightCm": 93.38,
+      "descriptionEn": "Morning mist, an orange sun and reflections in Le Havre harbour are left on canvas in quick strokes; the title gave the Impressionists their name.",
+      "yearEn": "1872"
     },
     {
       "id": "i02",
@@ -1681,7 +1890,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 112.69
+      "physicalHeightCm": 112.69,
+      "descriptionEn": "Monet returned repeatedly to his Giverny pond in later life; water, reflection and light approach abstraction and become a bridge from Impressionism to modern painting.",
+      "yearEn": "1906"
     },
     {
       "id": "i03",
@@ -1702,7 +1913,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 76.93,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "The same Gothic facade appears in different colour at different hours; Monet proves that the subject of painting can be light itself.",
+      "yearEn": "1892–1894"
     },
     {
       "id": "i04",
@@ -1723,7 +1936,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 89.19
+      "physicalHeightCm": 89.19,
+      "descriptionEn": "Sunlight falls through leaves onto dancers and tables; Renoir records a moment of Parisian popular pleasure in warm colour.",
+      "yearEn": "1876"
     },
     {
       "id": "i05",
@@ -1744,7 +1959,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 88.88
+      "physicalHeightCm": 88.88,
+      "descriptionEn": "Friends, glasses, fruit and the Seine crowd a balcony; Renoir brings Impressionist sociability to its peak.",
+      "yearEn": "1880–1881"
     },
     {
       "id": "i06",
@@ -1765,7 +1982,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 107.61,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Degas observes a ballet rehearsal through a tilted frame and an incidental viewpoint; the modern urban body appears between strict training and everyday ease.",
+      "yearEn": "c. 1874"
     },
     {
       "id": "i07",
@@ -1786,7 +2005,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 99.38
+      "physicalHeightCm": 99.38,
+      "descriptionEn": "Streetlamps, carriages and pedestrians become leaping points of colour; Pissarro draws the rhythm of the modern city into Impressionist experiments in light.",
+      "yearEn": "1897"
     },
     {
       "id": "p01",
@@ -1807,7 +2028,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 95.0
+      "physicalHeightCm": 95.0,
+      "descriptionEn": "Swirling nebulae, a bright moon and a sleeping village form an inner cosmos; Van Gogh makes landscape the site of a trembling soul.",
+      "yearEn": "1889"
     },
     {
       "id": "p02",
@@ -1828,7 +2051,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 91.54,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Thick paint raises sunflower petals like flames; Van Gogh expresses vital energy directly through colour and touch.",
+      "yearEn": "1888–1889"
     },
     {
       "id": "p03",
@@ -1849,7 +2074,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 95.44
+      "physicalHeightCm": 95.44,
+      "descriptionEn": "Cézanne breaks mountain, trees and houses into a structure of answering colour planes, later seen as a crucial step toward Cubism.",
+      "yearEn": "c. 1890"
     },
     {
       "id": "p04",
@@ -1870,7 +2097,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 44.12
+      "physicalHeightCm": 44.12,
+      "descriptionEn": "Gauguin completed a great allegory of life in Tahiti; decorative colour and primal figures together ask after existence, origin and destination.",
+      "yearEn": "1897–1898"
     },
     {
       "id": "p05",
@@ -1891,7 +2120,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 79.88
+      "physicalHeightCm": 79.88,
+      "descriptionEn": "Seurat fixes Parisian day-trippers into a still rite through scientific pointillism, turning the Impressionist instant into structured modern order.",
+      "yearEn": "1884–1886"
     },
     {
       "id": "p06",
@@ -1912,7 +2143,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 94.19,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "A wavy sky and a screaming figure externalise anxiety as visual sound; Munch makes psychological states a central subject of modern art.",
+      "yearEn": "1893"
     },
     {
       "id": "p07",
@@ -1933,7 +2166,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 119.89,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Gold ornament, mosaic-like pattern and an embracing couple interweave; Klimt reshapes love and eternity in the decorative language of the Vienna Secession.",
+      "yearEn": "1907–1908"
     },
     {
       "id": "v01",
@@ -1954,7 +2189,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 115.5
+      "physicalHeightCm": 115.5,
+      "descriptionEn": "Five dancers join hands in a red ring; Matisse returns painting to the purest rhythm of life through flat colour and simplified form.",
+      "yearEn": "1910"
     },
     {
       "id": "v02",
@@ -1975,7 +2212,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 79.75
+      "physicalHeightCm": 79.75,
+      "descriptionEn": "Colour, line and form collide on the canvas like music; Kandinsky raises abstract painting to a visual symphony of the inner spirit.",
+      "yearEn": "1913"
     },
     {
       "id": "v03",
@@ -1996,7 +2235,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 118.34,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Black lines, primary colours and white ground form absolute balance; Mondrian reduces the world to a universal geometric order through Neoplasticism.",
+      "yearEn": "1921"
     },
     {
       "id": "v04",
@@ -2017,7 +2258,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 119.5
+      "physicalHeightCm": 119.5,
+      "descriptionEn": "A black square floats on white; Malevich declares that painting can leave object and narrative behind, becoming the zero point of Suprematism.",
+      "yearEn": "1915"
     },
     {
       "id": "v05",
@@ -2038,7 +2281,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 110.08,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Circles, geometric facets and colour assemble a half-human, half-mask face; Klee keeps childlike intuition and humour inside rational construction.",
+      "yearEn": "1922"
     },
     {
       "id": "v06",
@@ -2059,7 +2304,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 89.89,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "A blue horse's curving outline and red hills breathe together; Marc seeks the spiritual essence of animal and nature through unnatural colour.",
+      "yearEn": "1911"
     },
     {
       "id": "v07",
@@ -2080,7 +2327,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 90.06,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Sharp angles, diagonals and glaring colour make the modern city a theatre of desire; Kirchner records the vertigo and loneliness of Berlin streets through Expressionism.",
+      "yearEn": "1913"
     },
     {
       "id": "x01",
@@ -2101,7 +2350,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 79.69
+      "physicalHeightCm": 79.69,
+      "descriptionEn": "Horses, workers and buildings diffuse into continuous energy in the light; Futurism paints speed, labour and urban life as dynamic force.",
+      "yearEn": "1910"
     },
     {
       "id": "x02",
@@ -2122,7 +2373,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 77.25
+      "physicalHeightCm": 77.25,
+      "descriptionEn": "Elongated body and warm contour fill the modern nude with intimacy; Modigliani turns the line of the School of Paris into elegant silence.",
+      "yearEn": "1917"
     },
     {
       "id": "x03",
@@ -2143,7 +2396,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 73.07,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Gaunt form, bare shoulder and fixed gaze are charged with tension; Schiele explores body, psyche and intimacy through nervous line.",
+      "yearEn": "1917"
     },
     {
       "id": "x04",
@@ -2164,7 +2419,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 103.48
+      "physicalHeightCm": 103.48,
+      "descriptionEn": "Figures are violently compressed and wrenched in a distorted interior; Beckmann presents the trauma and alienation of modern society in a postwar image.",
+      "yearEn": "1918–1919"
     },
     {
       "id": "x05",
@@ -2185,7 +2442,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 88.36,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Mechanical lines and bird forms seem to emit an inaudible twittering; Klee dismantles the vitality of a technological age through precise absurdity.",
+      "yearEn": "1922"
     },
     {
       "id": "x06",
@@ -2206,7 +2465,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 96.04,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Geometric forms float in pale space; Malevich gives abstract shape a cosmic weightlessness and self-sufficient order.",
+      "yearEn": "1916"
     },
     {
       "id": "u01",
@@ -2227,7 +2488,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 99.44,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "A farmer and his daughter stand before a Gothic wooden house; Grant Wood shapes the sturdiness and contradiction of the American rural myth in precise realism.",
+      "yearEn": "1930"
     },
     {
       "id": "u02",
@@ -2248,7 +2511,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 98.68,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "A large golden figure 5 flashes repeatedly against red and black; Demuth fuses Precisionism and urban speed into a visual poem.",
+      "yearEn": "1928"
     },
     {
       "id": "u03",
@@ -2269,7 +2534,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 73.89,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Military insignia, numbers and colour blocks assemble an abstract memorial; Hartley hides personal mourning and the memory of the First World War inside military signs.",
+      "yearEn": "1914"
     },
     {
       "id": "u04",
@@ -2290,7 +2557,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 98.25
+      "physicalHeightCm": 98.25,
+      "descriptionEn": "Winding shapes and natural colour fields abstract the rhythm of lakeshore and fishing rod; Dove proves American abstraction can grow from the experience of land rather than European theory.",
+      "yearEn": "1925"
     },
     {
       "id": "u05",
@@ -2311,7 +2580,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 120.0,
-      "physicalHeightCm": 98.4
+      "physicalHeightCm": 98.4,
+      "descriptionEn": "Skyscrapers, bridges and waterfront are broken into vibrating lines and colour planes; Marin answers New York's vertical anxiety with the energy of watercolour.",
+      "yearEn": "1922"
     },
     {
       "id": "u06",
@@ -2332,7 +2603,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 108.47,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Cables, arches and lights become radiating geometry; Stella paints the modern bridge as a Gothic cathedral of American industrial civilisation.",
+      "yearEn": "1939"
     },
     {
       "id": "u07",
@@ -2353,7 +2626,9 @@
       "license": "Public domain",
       "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
       "physicalWidthCm": 76.99,
-      "physicalHeightCm": 120.0
+      "physicalHeightCm": 120.0,
+      "descriptionEn": "Transparent colour planes and spires overlap into a prism of light; Feininger fuses Gothic structure, Cubism and lyrical abstraction into an architecture of modern light.",
+      "yearEn": "1930"
     },
     {
       "id": "a07",
@@ -2374,7 +2649,9 @@
       "source": "https://commons.wikimedia.org/wiki/File:Battle_of_Issus_mosaic_-_Museo_Archeologico_Nazionale_-_Naples_2013-05-16_16-25-06_BW.jpg",
       "filePage": "https://commons.wikimedia.org/wiki/File:Battle_of_Issus_mosaic_-_Museo_Archeologico_Nazionale_-_Naples_2013-05-16_16-25-06_BW.jpg",
       "license": "Public domain",
-      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content"
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
+      "descriptionEn": "Roman mosaic records the clash of Alexander the Great and Darius III through dense action, oblique perspective and a dramatic instant, embodying the public commemorative function of ancient narrative imagery.",
+      "yearEn": "c. 100 BCE"
     },
     {
       "id": "a08",
@@ -2395,7 +2672,9 @@
       "source": "https://commons.wikimedia.org/wiki/File:Bayeux_Tapestry_scene23_Harold_sacramentum_fecit_Willelmo_duci.jpg",
       "filePage": "https://commons.wikimedia.org/wiki/File:Bayeux_Tapestry_scene23_Harold_sacramentum_fecit_Willelmo_duci.jpg",
       "license": "Public domain",
-      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content"
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
+      "descriptionEn": "The embroidered strip turns the Norman Conquest into continuous narrative; linear figures, inscriptions and patterned borders form a medieval visual history.",
+      "yearEn": "c. 1070"
     },
     {
       "id": "e07",
@@ -2416,7 +2695,9 @@
       "source": "https://commons.wikimedia.org/wiki/File:San_Romano_Battle_(Paolo_Uccello,_London)_01.jpg",
       "filePage": "https://commons.wikimedia.org/wiki/File:San_Romano_Battle_(Paolo_Uccello,_London)_01.jpg",
       "license": "Public domain",
-      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content"
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
+      "descriptionEn": "Uccello organises battle through geometric armour, lances and a gridded ground, converting spatial perspective into almost abstract rhythm — a major early Renaissance experiment in order and observation.",
+      "yearEn": "c. 1435–1440"
     },
     {
       "id": "e08",
@@ -2437,7 +2718,9 @@
       "source": "https://commons.wikimedia.org/wiki/File:Ghent_Altarpiece_-_Adoration_of_the_Mystic_Lamb.jpg",
       "filePage": "https://commons.wikimedia.org/wiki/File:Ghent_Altarpiece_-_Adoration_of_the_Mystic_Lamb.jpg",
       "license": "Public domain",
-      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content"
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
+      "descriptionEn": "Jan van Eyck renders jewel-like detail in oil, gathering redemption, pilgrimage and the observation of nature into a vast altarpiece system.",
+      "yearEn": "c. 1420–1432"
     },
     {
       "id": "h08",
@@ -2458,7 +2741,9 @@
       "source": "https://commons.wikimedia.org/wiki/File:Michelangelo,_tondo_doni_03.jpg",
       "filePage": "https://commons.wikimedia.org/wiki/File:Michelangelo,_tondo_doni_03.jpg",
       "license": "Public domain",
-      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content"
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
+      "descriptionEn": "Michelangelo sets the Holy Family in a circular composition, showing the High Renaissance pursuit of sculptural presence and overall order through twisting bodies, modelled volume and warm-cool colour.",
+      "yearEn": "c. 1504–1507"
     },
     {
       "id": "b08",
@@ -2479,7 +2764,9 @@
       "source": "https://commons.wikimedia.org/wiki/File:Rembrandt_-_The_Anatomy_Lesson_of_Dr_Nicolaes_Tulp.jpg",
       "filePage": "https://commons.wikimedia.org/wiki/File:Rembrandt_-_The_Anatomy_Lesson_of_Dr_Nicolaes_Tulp.jpg",
       "license": "Public domain",
-      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content"
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
+      "descriptionEn": "Rembrandt turns an anatomy demonstration into collective psychological narrative through spotlight chiaroscuro; gazes, gestures and light together form a classic of Dutch Baroque group portraiture.",
+      "yearEn": "1632"
     },
     {
       "id": "r08",
@@ -2500,7 +2787,9 @@
       "source": "https://commons.wikimedia.org/wiki/File:Ingres,_Napoleon_on_his_Imperial_throne.jpg",
       "filePage": "https://commons.wikimedia.org/wiki/File:Ingres,_Napoleon_on_his_Imperial_throne.jpg",
       "license": "Public domain",
-      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content"
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
+      "descriptionEn": "Ingres presents Napoleon's authority in a frontal, symmetrical, icon-like composition, layering Roman imperial imagery, court ritual and Neoclassical clarity into political apotheosis.",
+      "yearEn": "1806"
     },
     {
       "id": "m08",
@@ -2521,7 +2810,9 @@
       "source": "https://commons.wikimedia.org/wiki/File:El_Tres_de_Mayo,_by_Francisco_de_Goya,_from_Prado_thin_black_margin.jpg",
       "filePage": "https://commons.wikimedia.org/wiki/File:El_Tres_de_Mayo,_by_Francisco_de_Goya,_from_Prado_thin_black_margin.jpg",
       "license": "Public domain",
-      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content"
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
+      "descriptionEn": "Goya records the cruelty of war in a night-lit execution, arranging victims, muzzles and horizon into a moral indictment and opening the theme of individual suffering in Romantic history painting.",
+      "yearEn": "1814"
     },
     {
       "id": "s07",
@@ -2542,7 +2833,9 @@
       "source": "https://commons.wikimedia.org/wiki/File:Gustave_Courbet_018.jpg",
       "filePage": "https://commons.wikimedia.org/wiki/File:Gustave_Courbet_018.jpg",
       "license": "Public domain",
-      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content"
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
+      "descriptionEn": "Courbet paints ordinary labourers' bodies and work at nearly life size, granting a neglected class the solemn scale of traditional history painting — a manifesto of Realism.",
+      "yearEn": "1849"
     },
     {
       "id": "s08",
@@ -2563,7 +2856,9 @@
       "source": "https://commons.wikimedia.org/wiki/File:Ford_Madox_Brown_-_Work_-_Google_Art_Project.jpg",
       "filePage": "https://commons.wikimedia.org/wiki/File:Ford_Madox_Brown_-_Work_-_Google_Art_Project.jpg",
       "license": "Public domain",
-      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content"
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
+      "descriptionEn": "Brown places road-menders, labourers, scholars and gentry together in a modern street, questioning labour and public morality through crowded detail.",
+      "yearEn": "1852–1865"
     },
     {
       "id": "i08",
@@ -2584,7 +2879,9 @@
       "source": "https://commons.wikimedia.org/wiki/File:%C3%89douard_Manet_-_Le_D%C3%A9jeuner_sur_l'herbe.jpg",
       "filePage": "https://commons.wikimedia.org/wiki/File:%C3%89douard_Manet_-_Le_D%C3%A9jeuner_sur_l'herbe.jpg",
       "license": "Public domain",
-      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content"
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
+      "descriptionEn": "Manet borrows a classical composition yet breaks convention with contemporary figures and direct flat painting, bringing modern life, the nude tradition and public scandal into the picture and opening a new space of seeing for Impressionism.",
+      "yearEn": "1863"
     },
     {
       "id": "p08",
@@ -2605,7 +2902,9 @@
       "source": "https://commons.wikimedia.org/wiki/File:La_Boh%C3%A9mienne_endormie.jpg",
       "filePage": "https://commons.wikimedia.org/wiki/File:La_Boh%C3%A9mienne_endormie.jpg",
       "license": "Public domain",
-      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content"
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
+      "descriptionEn": "Rousseau organises a dream through clear contour, still moonlight and a stage-like space without depth, showing Post-Impressionism's alternative path into subjective imagination and symbolic image.",
+      "yearEn": "1897"
     },
     {
       "id": "v08",
@@ -2626,7 +2925,9 @@
       "source": "https://commons.wikimedia.org/wiki/File:Armory_Show,_1913,_the_Cubist_room,_Raymond_Duchamp-Villon,_Albert_Gleizes,_Marcel_Duchamp,_Alexander_Archipenko,_New_York_Tribune,_17_February_1913,_p._7.jpg",
       "filePage": "https://commons.wikimedia.org/wiki/File:Armory_Show,_1913,_the_Cubist_room,_Raymond_Duchamp-Villon,_Albert_Gleizes,_Marcel_Duchamp,_Alexander_Archipenko,_New_York_Tribune,_17_February_1913,_p._7.jpg",
       "license": "Public domain",
-      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content"
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
+      "descriptionEn": "Duchamp superimposes successive movements in one picture, rewriting pictorial representation through the spatialised problem of time; this 1913 Armory Show installation view records its place in public controversy over modern art.",
+      "yearEn": "1912"
     },
     {
       "id": "x07",
@@ -2647,7 +2948,9 @@
       "source": "https://commons.wikimedia.org/wiki/File:Marc_Chagall,_I_and_the_Village_(50394064557).jpg",
       "filePage": "https://commons.wikimedia.org/wiki/File:Marc_Chagall,_I_and_the_Village_(50394064557).jpg",
       "license": "Public domain",
-      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content"
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
+      "descriptionEn": "Chagall organises the picture through fragmented, inverted village memory, setting childhood, fantasy and colour experience side by side — evidence of the expanding subjective psychological space of early twentieth-century painting.",
+      "yearEn": "1911"
     },
     {
       "id": "x08",
@@ -2668,7 +2971,9 @@
       "source": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Selbstportr%C3%A4t_mit_gesenktem_Kopf%2C_1912.jpg",
       "filePage": "https://commons.wikimedia.org/wiki/File:Egon_Schiele_-_Selbstportr%C3%A4t_mit_gesenktem_Kopf%2C_1912.jpg",
       "license": "Public domain",
-      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content"
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
+      "descriptionEn": "Schiele gazes at himself through tense contour, bare paper and nervous touch; portraiture turns from traditional likeness to a direct writing of the subject's psyche.",
+      "yearEn": "1912"
     },
     {
       "id": "u08",
@@ -2689,13 +2994,19 @@
       "source": "https://commons.wikimedia.org/wiki/File:The_House_by_the_Railroad_by_Edward_Hopper_1925.jpg",
       "filePage": "https://commons.wikimedia.org/wiki/File:The_House_by_the_Railroad_by_Edward_Hopper_1925.jpg",
       "license": "Public domain",
-      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content"
+      "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Reusing_content",
+      "descriptionEn": "Hopper builds an emotional space of American modern life from an isolated house, still tracks and cold light, turning an ordinary building into a symbol of estrangement and silence.",
+      "yearEn": "1925"
     }
   ],
   "licensing": {
     "policy": "全部图像来自 Wikimedia Commons，均为公有领域（Public Domain）或 CC0 授权。",
     "notice": "作品年代与作者信息为本项目整理；授权以各文件页面为准。",
-    "assets": "图片仅用于本地教育展示，随项目离线打包。"
+    "assets": "图片仅用于本地教育展示，随项目离线打包。",
+    "policyEn": "All images are drawn from Wikimedia Commons and are either in the public domain or released under CC0.",
+    "noticeEn": "Dates and attributions have been compiled by this project; the licence on each file page is authoritative.",
+    "assetsEn": "Images are used solely for local educational display and are packaged offline with the project."
   },
-  "network": "运行时零外部请求；所有脚本、样式、字体与图片均随 dist 本地打包。"
+  "network": "运行时零外部请求；所有脚本、样式、字体与图片均随 dist 本地打包。",
+  "networkEn": "No external requests at runtime; all scripts, styles, fonts and images ship locally with dist."
 }

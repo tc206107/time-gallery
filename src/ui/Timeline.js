@@ -1,3 +1,6 @@
+import { pick } from '../i18n/pick.js';
+import { t } from '../i18n/strings.js';
+
 export class Timeline {
   constructor({ container, onPeriodSelected }) {
     this.container = container;
@@ -10,14 +13,13 @@ export class Timeline {
     if (!this.el) {
       this.el = document.createElement('section');
       this.el.className = 'screen timeline-screen';
-      this.el.setAttribute('aria-label', '时间轴');
       this.el.innerHTML = `
         <header class="timeline-header">
           <div>
-            <p class="screen-kicker">树状时间轴</p>
-            <h1>十二个时代的图像现场</h1>
+            <p class="screen-kicker"></p>
+            <h1></h1>
           </div>
-          <p class="timeline-hint">悬停查看代表画作，点击节点进入该时期画廊</p>
+          <p class="timeline-hint"></p>
         </header>
         <div class="timeline-scroll">
           <div class="timeline-tree"></div>
@@ -26,12 +28,19 @@ export class Timeline {
       this.container.appendChild(this.el);
     }
 
+    // 时间轴是纯 DOM：语言切换时整棵重渲染即可，无 WebGL 代价。
+    this.el.setAttribute('aria-label', t('timeline.aria'));
+    this.el.querySelector('.screen-kicker').textContent = t('timeline.kicker');
+    this.el.querySelector('.timeline-header h1').textContent = t('timeline.title');
+    this.el.querySelector('.timeline-hint').textContent = t('timeline.hint');
+
     const tree = this.el.querySelector('.timeline-tree');
     tree.innerHTML = '';
     this.handlers.clear();
 
     periods.forEach((period, index) => {
       const works = artworks.filter((item) => item.periodId === period.id);
+      const periodName = pick(period, 'name', period.id);
       const node = document.createElement('article');
       node.className = 'timeline-node';
       node.dataset.id = period.id;
@@ -39,27 +48,30 @@ export class Timeline {
 
       const painters = [...new Set(works.map((item) => {
         const artist = this.artistsById?.get(item.artistId);
-        return artist ? artist.name : '佚名';
+        return artist ? pick(artist, 'name', t('timeline.unknownArtist')) : t('timeline.unknownArtist');
       }))].slice(0, 8).join(' · ');
 
-      const thumbs = works.slice(0, 3).map((work) => `
-        <img src="${work.thumb || work.image}" alt="${work.title}" loading="lazy" />
-      `).join('');
+      const thumbs = works.slice(0, 3).map((work) => {
+        const title = pick(work, 'title');
+        return `
+        <img src="${work.thumb || work.image}" alt="${title}" loading="lazy" />
+      `;
+      }).join('');
 
       node.innerHTML = `
-        <div class="node-main" role="button" tabindex="0" aria-label="进入${period.name}画廊">
+        <div class="node-main" role="button" tabindex="0">
           <div class="node-artists" aria-hidden="true">${painters}</div>
           <div class="node-core">
-            <span class="node-range">${period.range}</span>
-            <h2>${period.name}</h2>
-            <span class="node-count">${works.length} 幅画作</span>
+            <span class="node-range">${pick(period, 'range')}</span>
+            <h2>${periodName}</h2>
+            <span class="node-count">${t('timeline.artworkCount', { count: works.length })}</span>
           </div>
         </div>
         <div class="timeline-card">
           <div class="card-thumbs">${thumbs}</div>
           <div class="card-copy">
-            <h3>${period.name}</h3>
-            <p>${period.description}</p>
+            <h3>${periodName}</h3>
+            <p>${pick(period, 'description')}</p>
           </div>
         </div>
       `;
@@ -70,6 +82,7 @@ export class Timeline {
         event.preventDefault();
         this.onPeriodSelected(period.id);
       };
+      main.setAttribute('aria-label', t('timeline.enterPeriod', { period: periodName }));
       main.addEventListener('click', activate);
       main.addEventListener('keydown', activate);
       this.handlers.set(main, activate);

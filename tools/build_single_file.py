@@ -109,8 +109,17 @@ def main() -> int:
         return 1
 
     safe_js = js.replace("</script>", "<\\/script>")
+    # 静态模板按默认语言（英文）写死。运行时会按用户选择改写 <html lang>、<title>
+    # 与 description，但「JS 执行前的一瞬」应当已经是英文，否则默认英文的用户会
+    # 先看到一帧中文标题。这里直接取 manifest 的英文侧字段。
+    doc_lang = "en"
+    doc_title = (manifest.get("project", {}).get("nameEn")
+                 or manifest.get("project", {}).get("name") or "Time Gallery")
+    doc_desc = manifest.get("project", {}).get("descriptionEn", "")
+    # 描述里可能含 <i> 之类的标记，去掉标签避免破坏 meta 属性
+    doc_desc = re.sub(r"<[^>]+>", "", doc_desc).replace('"', "&quot;")
     html = f"""<!doctype html>
-<html lang="zh-CN">
+<html lang="{doc_lang}">
   <head>
     <meta charset="UTF-8" />
     <meta
@@ -119,12 +128,12 @@ def main() -> int:
     />
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#f6f0e5" />
-    <meta name="description" content="时光画廊：以第一人称 3D 展厅浏览十二个艺术时期与九十六幅公有领域经典画作。" />
+    <meta name="description" content="{doc_desc}" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="时光画廊" />
+    <meta name="apple-mobile-web-app-title" content="{doc_title}" />
     <link rel="icon" href="{favicon_uri}" type="image/svg+xml" />
-    <title>时光画廊</title>
+    <title>{doc_title}</title>
     <style>
 {css}
     </style>

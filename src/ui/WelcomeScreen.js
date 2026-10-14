@@ -1,3 +1,6 @@
+import { createLanguageToggle } from '../i18n/LanguageToggle.js';
+import { t } from '../i18n/strings.js';
+
 const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
 
 export class WelcomeScreen {
@@ -5,6 +8,7 @@ export class WelcomeScreen {
     this.container = container;
     this.onStart = onStart;
     this.el = null;
+    this.langToggle = null;
     this.handleStart = this.handleStart.bind(this);
   }
 
@@ -12,7 +16,6 @@ export class WelcomeScreen {
     if (!this.el) {
       this.el = document.createElement('section');
       this.el.className = 'screen welcome-screen';
-      this.el.setAttribute('aria-label', '欢迎');
       this.el.innerHTML = `
         <div class="welcome-bg" aria-hidden="true">
           <span class="doodle doodle-arc"></span>
@@ -27,20 +30,38 @@ export class WelcomeScreen {
         <div class="welcome-stage">
           <div class="blue-arch" aria-hidden="true"></div>
           <div class="welcome-copy">
-            <p class="welcome-kicker">艺术与观念 · Arts and Ideas</p>
-            <h1 class="welcome-title">时光画廊</h1>
-            <p class="welcome-subtitle">从洞穴壁画到现代主义，步入十二个时代的图像现场</p>
-            <button class="primary-button welcome-start" type="button">进入时间轴</button>
+            <div class="welcome-lang"></div>
+            <p class="welcome-kicker"></p>
+            <h1 class="welcome-title"></h1>
+            <p class="welcome-subtitle"></p>
+            <button class="primary-button welcome-start" type="button"></button>
           </div>
         </div>
       `;
       this.container.appendChild(this.el);
+
+      // 语言切换器放在文案列内（文档流），从布局上排除与标题/按钮重叠的可能。
+      this.langToggle = createLanguageToggle({ variant: 'default' });
+      this.el.querySelector('.welcome-lang').appendChild(this.langToggle.element);
+
       this.el.querySelector('.welcome-start').addEventListener('click', this.handleStart);
     }
+    this.applyStrings();
     this.el.hidden = false;
     requestAnimationFrame(() => {
       requestAnimationFrame(() => this.el.classList.add('is-active'));
     });
+  }
+
+  // 语言变化后重刷首屏文案（不重建 DOM、不影响入场动画状态）。
+  applyStrings() {
+    if (!this.el) return;
+    this.el.setAttribute('aria-label', t('welcome.aria'));
+    this.el.querySelector('.welcome-kicker').textContent = t('welcome.kicker');
+    this.el.querySelector('.welcome-title').textContent = t('welcome.title');
+    this.el.querySelector('.welcome-subtitle').textContent = t('welcome.subtitle');
+    this.el.querySelector('.welcome-start').textContent = t('welcome.start');
+    this.langToggle?.sync();
   }
 
   hide() {
@@ -59,6 +80,7 @@ export class WelcomeScreen {
     if (!this.el) return;
     this.el.remove();
     this.el = null;
+    this.langToggle = null;
   }
 }
 

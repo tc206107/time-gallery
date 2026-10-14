@@ -1,0 +1,106 @@
+{
+  "_comment": "时光画廊英文内容。按用户选择「以英文重写同等信息量」撰写，不逐字直译中文，但信息量与学术口径一致。术语采用艺术史通行英文名称。",
+
+  "project": {
+    "nameEn": "Time Gallery",
+    "descriptionEn": "An immersive art-history gallery in the browser. Following the broad arc of <i>Arts and Ideas</i>, it threads twelve periods of art and more than ninety public-domain masterworks through a first-person 3D exhibition."
+  },
+
+  "academicReference": {
+    "noteEn": "This project is intended for education and general interest. All explanatory text is original, written by the editors within an academic framework; it reproduces no passage from the source book.",
+    "coreTexts": [
+      "Fleming, William & Marien, Mary Warner. Arts and Ideas. Thomson/Wadsworth, later editions.",
+      "Periodisation and narrative follow the ideologies, social conditions and prevailing spirit of the age that underlie artistic form."
+    ]
+  },
+
+  "licensing": {
+    "policyEn": "All images are drawn from Wikimedia Commons and are either in the public domain or released under CC0.",
+    "noticeEn": "Dates and attributions have been compiled by this project; the licence on each file page is authoritative.",
+    "assetsEn": "Images are used solely for local educational display and are packaged offline with the project."
+  },
+
+  "network": {
+    "networkEn": "No external requests at runtime; all scripts, styles, fonts and images ship locally with dist."
+  },
+
+  "periods": {
+    "ancient-medieval": {
+      "nameEn": "Ancient and Medieval",
+      "rangeEn": "c. 15,000 BCE – 1450 CE",
+      "descriptionEn": "From cave images and Aegean and Roman wall painting to Byzantine mosaic and Gothic manuscript, art served above all cosmology, religious authority and the memory of a community."
+    },
+    "early-renaissance": {
+      "nameEn": "Early Renaissance",
+      "rangeEn": "c. 1300–1500",
+      "descriptionEn": "Perspective, direct observation of nature and humanism arrived together. Painting turned from the icon toward a measurable world, and redefined humanity's place within it."
+    },
+    "high-renaissance": {
+      "nameEn": "High Renaissance",
+      "rangeEn": "c. 1500–1530",
+      "descriptionEn": "Leonardo, Raphael and Michelangelo fused the ideal body, classical order and scientific observation into a grand and highly synthesised vision."
+    },
+    "baroque": {
+      "nameEn": "Baroque",
+      "rangeEn": "c. 1600–1720",
+      "descriptionEn": "Reformation and Counter-Reformation recast what images were for. Theatrical light, dynamic composition and sensory intensity became a new language of persuasion and immersion."
+    },
+    "rococo-neoclassicism": {
+      "nameEn": "Rococo and Neoclassicism",
+      "rangeEn": "c. 1720–1810",
+      "descriptionEn": "Court taste turned toward refinement and pleasure, until the Enlightenment redirected art toward civic virtue, the ancient republic and rational grand narrative."
+    },
+    "romanticism": {
+      "nameEn": "Romanticism",
+      "rangeEn": "c. 1790–1850",
+      "descriptionEn": "Industrialisation and an age of revolution placed individual feeling, historical trauma, the sublime in nature and national imagination at the centre of painting."
+    },
+    "realism": {
+      "nameEn": "Realism",
+      "rangeEn": "c. 1848–1870",
+      "descriptionEn": "Courbet and the painters of Barbizon refused idealisation, carrying labour, city life and modern experience directly onto the canvas. Art became social observation."
+    },
+    "impressionism": {
+      "nameEn": "Impressionism",
+      "rangeEn": "c. 1860–1890",
+      "descriptionEn": "The science of light and colour, the railway and leisured city life changed how people saw. Painters recorded the atmosphere of a moment and made the canvas a site of light."
+    },
+    "post-impressionism": {
+      "nameEn": "Post-Impressionism and Symbolism",
+      "rangeEn": "c. 1880–1910",
+      "descriptionEn": "Cézanne, Van Gogh, Gauguin and Seurat set out from Impressionism toward structure, emotion, symbol and scientific order respectively, heralding the independence of modern art."
+    },
+    "modern-avant-garde": {
+      "nameEn": "Modern Avant-Garde",
+      "rangeEn": "c. 1900–1930",
+      "descriptionEn": "Fauvism, Expressionism, abstraction and Suprematism declared the autonomy of form: colour, line and composition no longer imitated the world but created one."
+    },
+    "expressionism-beyond": {
+      "nameEn": "Expressionism and Futurism",
+      "rangeEn": "c. 1905–1940",
+      "descriptionEn": "War, the metropolis, the machine and spiritual anxiety drove painting toward distortion and violent colour, while the School of Paris redefined the modern figure through line and colour."
+    },
+    "american-modern": {
+      "nameEn": "American Modernism and the Twentieth Century",
+      "rangeEn": "c. 1910–1945",
+      "descriptionEn": "American artists answered the industrial landscape with Precisionism, regionalist realism and abstract construction; postwar Abstract Expressionism and Pop continued these modern experiments."
+    }
+  },
+
+  "nationalities": {
+    "俄国": "Russian",
+    "俄罗斯 / 法国": "Russian / French",
+    "法国": "French",
+    "法国 / 美国": "French / American",
+    "奥地利": "Austrian",
+    "德国": "German",
+    "意大利": "Italian",
+    "拜占庭": "Byzantine",
+    "挪威": "Norwegian",
+    "法兰德斯": "Flemish",
+    "美国": "American",
+    "英国": "British",
+    "荷兰": "Dutch",
+    "西班牙": "Spanish"
+  }
+}
