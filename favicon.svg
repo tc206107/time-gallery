@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- 时光画廊图标：蓝色拱门（呼应欢迎页 blue-arch）+ 金色画框，取项目调色板 -->
+  <rect width="64" height="64" rx="12" fill="#f6f0e5"/>
+  <path d="M14 50V30a18 18 0 0 1 36 0v20" fill="none" stroke="#2f6f8f" stroke-width="6" stroke-linecap="round"/>
+  <rect x="24" y="26" width="16" height="20" rx="1.5" fill="none" stroke="#d8a84b" stroke-width="4"/>
+  <rect x="30" y="34" width="4" height="4" fill="#c65d3a"/>
+</svg>
