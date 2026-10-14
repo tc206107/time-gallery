@@ -97,10 +97,23 @@ def main() -> int:
     art_n = len([f for f in os.listdir(art_dir)]) if os.path.isdir(art_dir) else 0
     thumb_n = len([f for f in os.listdir(thumb_dir)]) if os.path.isdir(thumb_dir) else 0
 
+    # 离线目录会被 vite 的 emptyOutDir 清空，说明文档必须每次重新落盘，
+    # 否则分发给别人时目录里没有使用说明。
+    readme_src = os.path.join(ROOT, "tools", "offline-demo-README.md")
+    readme_dst = os.path.join(DEMO, "README.md")
+    readme_written = False
+    if os.path.exists(readme_src):
+        with open(readme_src, encoding="utf-8") as handle:
+            readme_text = handle.read()
+        with open(readme_dst, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(readme_text)
+        readme_written = True
+
     print(f"inlined scripts: {inlined_js}")
     print(f"inlined stylesheets: {inlined_css}")
     print(f"assets/art: {art_n} files")
     print(f"assets/thumb: {thumb_n} files")
+    print(f"README.md written: {readme_written}")
     if problems:
         for problem in problems:
             print(f"FAIL {problem}", file=sys.stderr)
