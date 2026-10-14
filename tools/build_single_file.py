@@ -63,6 +63,31 @@ def main() -> int:
             print(f"missing {path}; run the offline build first", file=sys.stderr)
             return 1
 
+    # 新旧一致性闸门：单文件包取的是 demo/assets/index.js，而 demo/ 由 build_offline_dir.py
+    # 从 dist/ 刷新。如果 demo 没刷新过就直接打包，会把上一轮的旧 JS 打进交付物里
+    # —— 产物看起来更新了、其实是旧的（本次实际踩到：单文件包里还是两阶段加载之前的代码）。
+    # 这里与 dist/index.html 当前引用的 bundle 逐字节比对，不一致就拒绝打包。
+    dist_index = os.path.join(ROOT, "dist", "index.html")
+    if os.path.exists(dist_index):
+        with open(dist_index, encoding="utf-8") as handle:
+            dist_html = handle.read()
+        match = re.search(r"assets/(index-[A-Za-z0-9_-]+\.js)", dist_html)
+        if match:
+            dist_js = os.path.join(ROOT, "dist", "assets", match.group(1))
+            if os.path.exists(dist_js):
+                with open(dist_js, "rb") as handle:
+                    dist_bytes = handle.read()
+                with open(bundle_path, "rb") as handle:
+                    demo_bytes = handle.read()
+                if dist_bytes != demo_bytes:
+                    print(
+                        "demo/assets/index.js 与 dist 当前构建不一致（demo 未刷新）。\n"
+                        "请先运行：python tools/build_offline_dir.py\n"
+                        "否则单文件包会打进上一轮的旧 JS。",
+                        file=sys.stderr,
+                    )
+                    return 1
+
     with open(bundle_path, encoding="utf-8") as handle:
         js = handle.read()
     with open(css_path, encoding="utf-8") as handle:
