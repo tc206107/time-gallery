@@ -1,0 +1,16 @@
+node_modules/
+dist/
+demo/
+release/
+.vite/
+__pycache__/
+*.pyc
+*.log
+
+# 本地验证产物（截图、子代理改前备份），不入库
+.shots/
+.shots2/
+.touch-backup/
+
+# 本地验收截图（由 tools/smoke.mjs 每次运行重新生成，属产物不入库）
+verify-room-*.png
