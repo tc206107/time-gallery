@@ -32,9 +32,12 @@ pnpm preview
 
 | 形态 | 产物 | 用途 |
 | --- | --- | --- |
-| 静态站 | `pnpm build` → `dist/` | 托管到任意静态服务器或 GitHub Pages，手机浏览器可直接访问 |
+| 在线静态站 | 已部署：<https://tc206107.github.io/time-gallery/> | 手机浏览器直接打开即可，桌面与移动端均可用 |
+| 离线单文件 | [Releases](https://github.com/tc206107/time-gallery/releases) 下载 zip，或 `tools/build_single_file.py` → `release/时光画廊-离线单文件版.html` | 单个 HTML 文件，双击即玩，无需任何服务器 |
 | 离线目录 | `npx vite build --config vite.config.offline.js` 后运行 `tools/inline_offline.py` | 拷贝整个目录后用本地静态服务器打开 |
-| 离线单文件 | `tools/build_single_file.py` → `release/时光画廊-离线单文件版.html` | 单个 HTML 文件，双击即玩，无需任何服务器 |
+
+**想直接玩**：手机打开 <https://tc206107.github.io/time-gallery/>；
+想离线玩：到 Releases 下载 `time-gallery-offline-v1.0.0.zip`，解压后双击 `index.html`。
 
 关于单文件版为什么必须把图片内联为 data URI：ES module 脚本在 `file://` 下会被 CORS 拒绝，
 所以单文件版改用 IIFE 经典脚本；但即使如此，Three.js 的 `TextureLoader` 会在 `<img>` 上设置
