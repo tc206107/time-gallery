@@ -240,7 +240,10 @@ function addVaultedCeiling(group, width, depth, height, material, ribMaterial = 
 }
 
 function addPolygonalShell(group, radius, height, sides, wallMat, floorMat, ceilingMat = null) {
-  const floor = addMesh(group, new THREE.CircleGeometry(radius, sides), floorMat, [0, 0.01, 0], [-Math.PI / 2, 0, 0], { castShadow: false });
+  // 地板用整圆（64 段）：CircleGeometry(radius, sides) 是内接多边形，边中点到墙面留约 0.92 的通缝，
+  // 墙角处能直接看见背景。整圆边缘比墙面多出 0.22（落到墙外），从房内看不见。
+  const floor = addMesh(group, new THREE.CircleGeometry(radius, 64), floorMat, [0, 0.01, 0], [-Math.PI / 2, 0, 0], { castShadow: false });
+  floor.name = 'floor';
   const sideLength = radius * 2 * Math.sin(Math.PI / sides);
   for (let i = 0; i < sides; i += 1) {
     const angle = (i / sides) * Math.PI * 2;
@@ -253,18 +256,32 @@ function addPolygonalShell(group, radius, height, sides, wallMat, floorMat, ceil
   return { radius, height, sides };
 }
 
-function addOvalShell(group, rx, rz, height, wallMat, floorMat, ceilingMat = null) {
+// thetaStart / thetaLength 用于在椭圆墙上留出缺口：整圈墙会把并排的矩形展厅封在外面，
+// 只有让出一段圆周，两个空间才能连通。约定与 CylinderGeometry 一致（x = r·sinθ、z = r·cosθ，
+// 故 +X 方向为 θ=π/2）。
+function addOvalShell(group, rx, rz, height, wallMat, floorMat, ceilingMat = null, thetaStart = 0, thetaLength = Math.PI * 2) {
+  // 椭圆盘（地板/天花）是 CircleGeometry：它躺在自身 XY 平面里，绕 X 转 ±90° 后局部 Y 变成世界 Z，
+  // 所以水平盘的缩放必须是 (rx, rz, 1)。原来写成 (rx, 1, rz)（那是圆柱的缩放写法）只会得到
+  // 2·rx × 2 的一条窄带——实测椭圆厅地板/天花各自只剩约 19×2，其余位置垂直下探全部打空，
+  // 玩家往下看直接是背景。（圆柱本身仍用 (rx, 1, rz)：它的圆截面在局部 XZ 平面，写法是对的。）
   const floor = addMesh(group, new THREE.CircleGeometry(1, 64), floorMat, [0, 0.01, 0], [-Math.PI / 2, 0, 0], { castShadow: false });
-  floor.scale.set(rx, 1, rz);
-  const wall = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, height, 64, 1, true), wallMat);
+  floor.scale.set(rx, rz, 1);
+  floor.name = 'floor';
+  // 圆筒法线朝外，材质默认 FrontSide：从厅内看内表面会被背面剔除，整圈墙根本不渲染
+  // （实测厅内水平打 24 条射线有 21 条什么都没命中，其它房间是 24/24 命中墙）。
+  // 这里为椭圆筒单独 clone 一个 BackSide 材质——该材质实例同时被矩形展厅的墙共用，不能就地翻面。
+  const ovalWallMat = wallMat.clone();
+  ovalWallMat.side = THREE.BackSide;
+  const wall = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, height, 64, 1, true, thetaStart, thetaLength), ovalWallMat);
+  wall.name = 'wall';
   wall.scale.set(rx, 1, rz);
   wall.position.y = height / 2;
-  wall.material.side = THREE.FrontSide;
   wall.receiveShadow = true;
   group.add(wall);
   if (ceilingMat) {
     const ceiling = addMesh(group, new THREE.CircleGeometry(1, 64), ceilingMat, [0, height, 0], [Math.PI / 2, 0, 0], { castShadow: false });
-    ceiling.scale.set(rx, 1, rz);
+    ceiling.scale.set(rx, rz, 1);
+    ceiling.name = 'ceiling';
   }
 }
 
@@ -383,7 +400,10 @@ function segmentPlacements(segments, y, count) {
 function polySegments(radius, sides, y = 2.8) {
   const sideLength = radius * 2 * Math.sin(Math.PI / sides);
   return Array.from({ length: sides }, (_, i) => {
-    const angle = (i / sides) * Math.PI * 2 + Math.PI / sides;
+    // 这里不能加 Math.PI / sides：addPolygonalShell 的墙面是方向为 i*2π/sides 的切平面，
+    // 多这半个扇区会把布点推到两墙之间的角部——既贴不上任何一面墙（实测离墙 1.5 以上），
+    // 画幅上半截又被穹顶壳盖住。去掉后布点方向与墙面法线一致。
+    const angle = (i / sides) * Math.PI * 2;
     const normal = new THREE.Vector3(-Math.sin(angle), 0, -Math.cos(angle)).normalize();
     return {
       x: Math.sin(angle) * radius,
@@ -450,22 +470,17 @@ function buildEarlyRenaissance() {
   const wall = surface('#d5cfbf', { roughness: 0.66, clearcoat: 0.055 });
   const floor = surface('#a58b70', { map: makeWoodFloorTexture('#a58b70', '#80684f', 512), roughness: 0.31, clearcoat: 0.14 });
   const ceiling = surface('#d9d4c8', { map: makeNoiseTexture('#d9d4c8', '#c2baab', 512, 0.025), roughness: 0.5 });
+  // 两间并排对齐，合成一条 x∈[-18,18]、z∈[-5,5] 的 36×10 通长画廊：接缝在 x=6，两翼各自开边，墙上无隔墙。
+  // 旧布局第二个房间用 cz:6 / depth:14（x∈[-6,6]、z∈[-1,13]），它的北墙 z=-1 横插进西翼内部成了一道室内隔墙，
+  // 挂在墙上的那幅画（最宽的一幅 4.6）看着像悬在房间当中。
   addRectRoom(group, { cx: -6, cz: 0, width: 24, depth: 10, height, wallMat: wall, floorMat: floor, ceilingMat: ceiling, openSides: ['east'] });
-  addRectRoom(group, { cx: 0, cz: 6, width: 12, depth: 14, height, wallMat: wall, floorMat: floor, ceilingMat: ceiling, openSides: ['west'] });
+  addRectRoom(group, { cx: 12, cz: 0, width: 12, depth: 10, height, wallMat: wall, floorMat: floor, ceilingMat: ceiling, openSides: ['west'] });
   addSkyDome(group, '#4c7891', '#8daab5', '#d7d0be');
   const pilaster = surface('#e4ddcc', { roughness: 0.58, clearcoat: 0.1 });
   addPilasters(group, 22, height, new THREE.Vector3(-6, 0, -5), new THREE.Vector3(0, 0, 1), pilaster, 4);
   addPilasters(group, 22, height, new THREE.Vector3(-6, 0, 5), new THREE.Vector3(0, 0, -1), pilaster, 4);
-  const segments = [
-    { x: -6, z: -5, length: 24, y: 2.7, normal: new THREE.Vector3(0, 0, 1), axis: new THREE.Vector3(1, 0, 0) },
-    { x: -6, z: 5, length: 24, y: 2.7, normal: new THREE.Vector3(0, 0, -1), axis: new THREE.Vector3(1, 0, 0) },
-    { x: 0, z: -1, length: 12, y: 2.7, normal: new THREE.Vector3(0, 0, 1), axis: new THREE.Vector3(1, 0, 0) },
-    { x: 0, z: 13, length: 12, y: 2.7, normal: new THREE.Vector3(0, 0, -1), axis: new THREE.Vector3(1, 0, 0) },
-    { x: 6, z: 6, length: 14, y: 2.7, normal: new THREE.Vector3(-1, 0, 0), axis: new THREE.Vector3(0, 0, 1) },
-    { x: -18, z: 0, length: 10, y: 2.7, normal: new THREE.Vector3(1, 0, 0), axis: new THREE.Vector3(0, 0, 1) },
-  ];
   return baseRoom(group, {
-    bounds: bounds(-18.5, 6.5, -5.5, 13.5),
+    bounds: bounds(-16.6, 16.6, -3.6, 3.6),
     background: '#a6bfc5',
     fogColor: '#c8cdbf',
     fogDensity: 0.0038,
@@ -477,9 +492,9 @@ function buildEarlyRenaissance() {
         { position: new THREE.Vector3(-12, 2.7, 4.72), normal: new THREE.Vector3(0, 0, -1), lookAt: new THREE.Vector3(-12, 2.7, 0) },
         { position: new THREE.Vector3(-4, 2.7, 4.72), normal: new THREE.Vector3(0, 0, -1), lookAt: new THREE.Vector3(-4, 2.7, 0) },
         { position: new THREE.Vector3(-17.72, 2.7, -2), normal: new THREE.Vector3(1, 0, 0), lookAt: new THREE.Vector3(-13, 2.7, -2) },
-        { position: new THREE.Vector3(5.72, 2.7, 3), normal: new THREE.Vector3(-1, 0, 0), lookAt: new THREE.Vector3(1, 2.7, 3) },
-        { position: new THREE.Vector3(-2, 2.7, -0.72), normal: new THREE.Vector3(0, 0, 1), lookAt: new THREE.Vector3(-2, 2.7, 4) },
-        { position: new THREE.Vector3(5.72, 2.7, 0), normal: new THREE.Vector3(-1, 0, 0), lookAt: new THREE.Vector3(1, 2.7, 0) },
+        { position: new THREE.Vector3(12, 2.7, -4.72), normal: new THREE.Vector3(0, 0, 1), lookAt: new THREE.Vector3(12, 2.7, 0) },
+        { position: new THREE.Vector3(17.72, 2.7, 0), normal: new THREE.Vector3(-1, 0, 0), lookAt: new THREE.Vector3(13, 2.7, 0) },
+        { position: new THREE.Vector3(12, 2.7, 4.72), normal: new THREE.Vector3(0, 0, -1), lookAt: new THREE.Vector3(12, 2.7, 0) },
       ];
       return items[index] || items[0];
     },
@@ -498,14 +513,23 @@ function buildHighRenaissance() {
   const ceiling = surface('#bbb3a2', { map: makeCofferTexture('#bbb3a2', '#8d887d', 512), roughness: 0.52, clearcoat: 0.08 });
   addReflectiveFloor(group, radius * 2, radius * 2, 0xd2c8b6);
   addPolygonalShell(group, radius, height, 8, wall, floor, ceiling);
-  addDomeShell(group, radius, height, surface('#c8c0ae', { map: makeCofferTexture('#c8c0ae', '#8f887b', 512), roughness: 0.55, clearcoat: 0.08 }));
+  // 原值 (radius, height)：穹顶在视平线 y=2.8 处半径只有 14.33，挡在墙面 14.78 之前，
+  // 墙上部、壁柱与高画幅顶部全被穹壳遮蔽。放大成 (radius+12, height) 后穹顶在墙面高度附近
+  // 才收进房内，起拱点约 y=7.97，高于最高画幅顶部。
+  addDomeShell(group, radius + 12, height, surface('#c8c0ae', { map: makeCofferTexture('#c8c0ae', '#8f887b', 512), roughness: 0.55, clearcoat: 0.08 }));
   addLightPanel(group, 3.1, 3.1, height + 0.22, '#dbe8e9', 1.0);
   const pilaster = surface('#e0d8c6', { roughness: 0.5, clearcoat: 0.12 });
   for (let i = 0; i < 8; i += 1) {
-    const angle = (i / 8) * Math.PI * 2;
-    const x = Math.sin(angle) * (radius - 0.3);
-    const z = Math.cos(angle) * (radius - 0.3);
-    addMesh(group, new THREE.BoxGeometry(0.16, height * 0.92, 0.28), pilaster, [x, height / 2, z], [0, -angle, 0]);
+    // 壁柱改立在墙角：布点回到墙面中心后，原来"墙面中心"的柱子会与画幅抢位置。
+    // 墙角线是两墙面的交线，半径 (radius - 0.22)/cos(π/8)（0.22 是 addWall 把墙面从切平面内移的量）；
+    // 柱体深 0.28，柱心再退 0.14 使柱面正好落在墙角线上。
+    // 朝向用 +angle（原为 -angle）：柱体局部 Z 是进深方向，只有 +angle 才沿半径指向墙外，
+    // 原负号仅在 angle=0/180° 时朝向正确，其余壁柱长短边朝向相反。
+    const cornerRadius = (radius - 0.22) / Math.cos(Math.PI / 8);
+    const angle = (i / 8) * Math.PI * 2 + Math.PI / 8;
+    const x = Math.sin(angle) * (cornerRadius - 0.14);
+    const z = Math.cos(angle) * (cornerRadius - 0.14);
+    addMesh(group, new THREE.BoxGeometry(0.16, height * 0.92, 0.28), pilaster, [x, height / 2, z], [0, angle, 0]);
   }
   return baseRoom(group, {
     bounds: bounds(-radius + 1.4, radius - 1.4, -radius + 1.4, radius - 1.4),
@@ -513,7 +537,9 @@ function buildHighRenaissance() {
     fogColor: '#c2beb2',
     fogDensity: 0.0032,
     height,
-    getArtworkTransform: segmentPlacements(polySegments(radius - 1.65, 8, 2.8), 2.8, 8),
+    // 布点半径用 radius（画幅中心因此落在 15-0.38=14.62），距墙面 14.78 为 0.16，
+    // 与其它矩形展厅的手感一致；原来 -1.65 又把画幅推到角部。
+    getArtworkTransform: segmentPlacements(polySegments(radius, 8, 2.8), 2.8, 8),
     cameraStart: new THREE.Vector3(0, 2.8, 10.5),
     cameraLookAt: new THREE.Vector3(0, 2.8, 0),
     spotlight: { topColor: '#efe0bb', sideColor: '#dfe3da', intensity: 29, sideIntensity: 12, angle: 0.4, sideAngle: 0.24, penumbra: 0.72, distance: 11, decay: 1.7 },
@@ -558,26 +584,29 @@ function buildRococoNeoclassical() {
   const wall = surface('#ded3bd', { roughness: 0.64, clearcoat: 0.08 });
   const floor = surface('#a98e6b', { map: makeWoodFloorTexture('#a98e6b', '#806a50', 512), roughness: 0.3, clearcoat: 0.16 });
   const ceiling = surface('#e3d9c4', { map: makeNoiseTexture('#e3d9c4', '#cbbda2', 512, 0.02), roughness: 0.48 });
-  addOvalShell(group, 9.5, 6.5, height, wall, floor, ceiling);
-  addRectRoom(group, { cx: 7.2, cz: 0, width: 14, depth: 10, height, wallMat: wall, floorMat: floor, ceilingMat: ceiling, openSides: ['west'] });
+  // 椭圆墙在东侧留缺口：缺口弧段两端正好落在 (6.06, ±5)，与矩形展厅西开口（x=6.06, z∈[-5,5]）等宽相接。
+  // 旧版是整圆筒，把矩形展厅整个封在外面——展厅里的 4 幅画在正常行走范围内进不去。
+  const ovalGapHalf = Math.asin(5 / 6.5); // ≈50.3°
+  addOvalShell(group, 9.5, 6.5, height, wall, floor, ceiling, Math.PI / 2 + ovalGapHalf, Math.PI * 2 - ovalGapHalf * 2);
+  addRectRoom(group, { cx: 13.06, cz: 0, width: 14, depth: 10, height, wallMat: wall, floorMat: floor, ceilingMat: ceiling, openSides: ['west'] });
   const pilaster = surface('#e9dfca', { roughness: 0.52, clearcoat: 0.15 });
-  addPilasters(group, 12, height, new THREE.Vector3(7.2, 0, -5), new THREE.Vector3(0, 0, 1), pilaster, 3);
-  addPilasters(group, 12, height, new THREE.Vector3(7.2, 0, 5), new THREE.Vector3(0, 0, -1), pilaster, 3);
+  addPilasters(group, 12, height, new THREE.Vector3(13.06, 0, -5), new THREE.Vector3(0, 0, 1), pilaster, 3);
+  addPilasters(group, 12, height, new THREE.Vector3(13.06, 0, 5), new THREE.Vector3(0, 0, -1), pilaster, 3);
   const ovalPlacements = [
-    { position: new THREE.Vector3(0, 2.75, 5.75), normal: new THREE.Vector3(0, 0, -1), lookAt: new THREE.Vector3(0, 2.75, 0) },
-    { position: new THREE.Vector3(6.21, 2.75, -4.09), normal: new THREE.Vector3(-0.7071, 0, 0.7071).normalize(), lookAt: new THREE.Vector3(0, 2.75, 0) },
-    { position: new THREE.Vector3(-6.21, 2.75, -4.09), normal: new THREE.Vector3(0.7071, 0, 0.7071).normalize(), lookAt: new THREE.Vector3(0, 2.75, 0) },
-    { position: new THREE.Vector3(-6.21, 2.75, 4.09), normal: new THREE.Vector3(0.7071, 0, -0.7071).normalize(), lookAt: new THREE.Vector3(0, 2.75, 0) },
+    { position: new THREE.Vector3(0, 2.75, 6.34), normal: new THREE.Vector3(0, 0, -1), lookAt: new THREE.Vector3(0, 2.75, 0) },
+    { position: new THREE.Vector3(6.70, 2.75, -4.41), normal: new THREE.Vector3(-0.58, 0, 0.81), lookAt: new THREE.Vector3(0, 2.75, 0) },
+    { position: new THREE.Vector3(-6.70, 2.75, -4.41), normal: new THREE.Vector3(0.58, 0, 0.81), lookAt: new THREE.Vector3(0, 2.75, 0) },
+    { position: new THREE.Vector3(-6.70, 2.75, 4.41), normal: new THREE.Vector3(0.58, 0, -0.81), lookAt: new THREE.Vector3(0, 2.75, 0) },
   ];
   const galleryPlacements = [
-    { position: new THREE.Vector3(4, 2.75, -4.72), normal: new THREE.Vector3(0, 0, 1), lookAt: new THREE.Vector3(4, 2.75, 0) },
-    { position: new THREE.Vector3(10, 2.75, 4.72), normal: new THREE.Vector3(0, 0, -1), lookAt: new THREE.Vector3(10, 2.75, 0) },
-    { position: new THREE.Vector3(13.72, 2.75, -2.2), normal: new THREE.Vector3(-1, 0, 0), lookAt: new THREE.Vector3(8, 2.75, -2.2) },
-    { position: new THREE.Vector3(13.72, 2.75, 2.2), normal: new THREE.Vector3(-1, 0, 0), lookAt: new THREE.Vector3(8, 2.75, 2.2) },
+    { position: new THREE.Vector3(11, 2.75, -4.72), normal: new THREE.Vector3(0, 0, 1), lookAt: new THREE.Vector3(11, 2.75, 0) },
+    { position: new THREE.Vector3(11, 2.75, 4.72), normal: new THREE.Vector3(0, 0, -1), lookAt: new THREE.Vector3(11, 2.75, 0) },
+    { position: new THREE.Vector3(19.78, 2.75, -2.2), normal: new THREE.Vector3(-1, 0, 0), lookAt: new THREE.Vector3(15, 2.75, -2.2) },
+    { position: new THREE.Vector3(19.78, 2.75, 2.2), normal: new THREE.Vector3(-1, 0, 0), lookAt: new THREE.Vector3(15, 2.75, 2.2) },
   ];
   const artworkPlacements = [...ovalPlacements, ...galleryPlacements];
   return baseRoom(group, {
-    bounds: bounds(-10.5, 15.2, -7.5, 7.5),
+    bounds: bounds(-6.7, 18.6, -3.9, 3.9),
     background: '#b7aa90',
     fogColor: '#c5b79b',
     fogDensity: 0.0018,
@@ -680,7 +709,9 @@ function buildPostImpressionism() {
   const floor = surface('#ad9b7e', { map: makeWoodFloorTexture('#ad9b7e', '#8e7b5e', 512), roughness: 0.31, clearcoat: 0.15 });
   const ceiling = surface('#a5ac94', { map: makeNoiseTexture('#a5ac94', '#8b927c', 512, 0.025), roughness: 0.52 });
   addPolygonalShell(group, radius, height, 8, wall, floor, ceiling);
-  addDomeShell(group, radius, height, surface('#b5b79f', { map: makeNoiseTexture('#b5b79f', '#96977e', 512, 0.025), roughness: 0.55, emissive: '#777c64', emissiveIntensity: 0.55 }));
+  // 同 buildHighRenaissance：原值 (radius, height) 的穹顶在视平线处半径 12.94~14.33，
+  // 挡在墙面 12.78 之前并盖住画幅上缘；放大成 (radius+12, height) 后起拱点升到墙面顶部附近。
+  addDomeShell(group, radius + 12, height, surface('#b5b79f', { map: makeNoiseTexture('#b5b79f', '#96977e', 512, 0.025), roughness: 0.55, emissive: '#777c64', emissiveIntensity: 0.55 }));
   addLightPanel(group, 2.2, 2.2, height + 0.22, '#f0e3bd', 1.45);
   return baseRoom(group, {
     bounds: bounds(-radius + 1.4, radius - 1.4, -radius + 1.4, radius - 1.4),
@@ -688,7 +719,8 @@ function buildPostImpressionism() {
     fogColor: '#aab39b',
     fogDensity: 0.0018,
     height,
-    getArtworkTransform: segmentPlacements(polySegments(radius - 1.65, 8, 2.8), 2.8, 8),
+    // 同 buildHighRenaissance：布点半径用 radius，画幅中心落在 13-0.38=12.62，距墙面 12.78 为 0.16。
+    getArtworkTransform: segmentPlacements(polySegments(radius, 8, 2.8), 2.8, 8),
     cameraStart: new THREE.Vector3(0, 2.7, 8.2),
     cameraLookAt: new THREE.Vector3(0, 2.8, 0),
     spotlight: { topColor: '#f0d19a', sideColor: '#d8ddc4', intensity: 29, sideIntensity: 12, angle: 0.4, sideAngle: 0.24, penumbra: 0.72, distance: 11, decay: 1.7 },
@@ -705,6 +737,15 @@ function buildModernAvantGarde() {
   const ceiling = surface('#e1dfda', { roughness: 0.5, clearcoat: 0.05 });
   addRectRoom(group, { cx: -9, cz: 0, width, depth, height, wallMat: wall, floorMat: floor, ceilingMat: ceiling, openSides: ['east'] });
   addRectRoom(group, { cx: 9, cz: 0, width, depth, height, wallMat: wall, floorMat: floor, ceilingMat: ceiling, openSides: ['west'] });
+  // 两翼在 x∈[-0.5, 0.5] 相接（cx=±9、width=17），地板与天花各自只铺到 0.5，中间留了一条 1 宽的缝：
+  // 实测沿 x=0 竖向取 5 个点向下打射线全部打空（玩家往下看直接是背景，x=±0.5 的隔断墙也像悬空的）。
+  // 用同一材质补两条 1.2 宽的窄条盖住，与两侧地板/天花同面同材质，重叠部分不可见。
+  addFloor(group, 1.2, depth, floor, 0, 0, 0.01);
+  addCeiling(group, 1.2, depth, ceiling, 0, 0, height);
+  // 这条 1 宽的走廊在南/北两端也没有端墙（两翼的南北墙各自只到 x=±0.5），
+  // 站在走廊里朝 ±z 看是一条 1 宽的通天缝。补两块端墙封口，与相邻墙端重叠 0.1，同材质不可见。
+  addWall(group, 1.2, height, 0, -9, new THREE.Vector3(0, 0, 1), wall);
+  addWall(group, 1.2, height, 0, 9, new THREE.Vector3(0, 0, -1), wall);
   addLightPanel(group, 4.8, 4.8, height + 0.05, '#e5e6df', 0.45);
   const partition = surface('#cfcec8', { roughness: 0.58, clearcoat: 0.1 });
   addMesh(group, new THREE.BoxGeometry(0.22, 7.4, 4.4), partition, [-0.5, height / 2, 0]);
@@ -718,7 +759,10 @@ function buildModernAvantGarde() {
     { x: 17.5, z: 0, length: 18, y: 2.7, normal: new THREE.Vector3(-1, 0, 0), axis: new THREE.Vector3(0, 0, 1) },
   ];
   return baseRoom(group, {
-    bounds: bounds(-18, 18, -10, 10),
+    // 原来 (-18, 18, -10, 10) 比真实墙体（x=±17.5、z=±9）还大，
+    // 玩家能沿 x 走出 0.5、沿 z 走出 1.0 到墙外（墙是 FrontSide，走到外面会直接看穿房间）。
+    // 按其它房间的统一口径改为墙体内缩 1.4。
+    bounds: bounds(-16.1, 16.1, -7.6, 7.6),
     background: '#a9aaa3',
     fogColor: '#bfc0ba',
     fogDensity: 0.0016,

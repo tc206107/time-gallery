@@ -65,7 +65,10 @@ await page.setUserAgent(
   'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
 );
 
-await page.goto(baseUrl, { waitUntil: 'networkidle0', timeout: 90000 });
+// 必须带上 ?smoke=1：本脚本有两项检查依赖 window.__timeGallery（调试接缝），
+// 而该接缝只在 smoke 模式下挂载。原来直接 goto(baseUrl)，这两项永远拿不到接口而假性失败。
+const testUrl = `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}smoke=1`;
+await page.goto(testUrl, { waitUntil: 'networkidle0', timeout: 90000 });
 await new Promise((r) => setTimeout(r, 1200));
 
 // 触屏能力是否被页面识别

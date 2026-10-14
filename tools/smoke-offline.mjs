@@ -30,7 +30,12 @@ await p.setViewport(
     ? { width: 390, height: 844, deviceScaleFactor: 2, isMobile: true, hasTouch: true }
     : { width: 1440, height: 900, deviceScaleFactor: 1 },
 );
-await p.goto(target, { waitUntil: 'load', timeout: 120000 });
+// 必须带上 smoke=1：'可打开画作详情' 依赖 window.__timeGallery 的
+// getArtworkTransforms / aimAtArtwork 调试接缝，而该接缝只在 smoke 模式下挂载。
+// 原来直接 goto(target)，ids 恒为空数组，点画循环一次都不执行，该项永远假性失败
+// （实测把同一个页面换成带 ?smoke=1 的 URL，详情即可正常打开）。
+const smokeTarget = `${target}${target.includes('?') ? '&' : '?'}smoke=1`;
+await p.goto(smokeTarget, { waitUntil: 'load', timeout: 120000 });
 await new Promise((r) => setTimeout(r, 1800));
 
 // 静态模板（JS 执行前）就是英文

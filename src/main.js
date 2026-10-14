@@ -71,6 +71,9 @@ gallery.onArtworkClick((artworkId) => {
 });
 
 if (new URLSearchParams(window.location.search).has('smoke')) {
+  // 调试接缝：把引擎实例本身交给自动化脚本，供几何审计（画框嵌合/悬空/越界）直接读场景图。
+  // THREE 句柄由 GalleryEngine 在 smoke 模式下挂到 window（那里已按命名空间引入，不增包体）。
+  window.__timeGalleryEngine = gallery;
   window.__timeGallery = {
     openArtwork(artworkId) {
       const artwork = artworks.find((item) => item.id === artworkId);

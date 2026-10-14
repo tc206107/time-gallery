@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { Box3, DoubleSide, Raycaster, Vector3 } from 'three';
 import { CSS2DObject, CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
 import { createLanguageToggle } from '../i18n/LanguageToggle.js';
 import { pick } from '../i18n/pick.js';
@@ -65,6 +66,8 @@ export class GalleryEngine {
     this.frameSamples = [];
     this.loader = new THREE.TextureLoader();
     this.loadGeneration = 0;
+    // 待发起的二级（原图）加载登记表：一个展厅的画全部登记完再按「离相机由近到远」发起。
+    this.pendingFullLoads = [];
     this.spotTargets = [];
     this.onCanvasClick = this.onCanvasClick.bind(this);
     this.onCanvasPointerDown = this.onCanvasPointerDown.bind(this);
@@ -79,6 +82,11 @@ export class GalleryEngine {
 
   async init() {
     if (this.initialized) return;
+    // 调试接缝：smoke 模式下把几何审计需要的少数 THREE 成员挂上 window。
+    // 只暴露用到的具名导入（不挂整个命名空间——那会阻止 Tree-shaking，实测包体 +188KB）。
+    if (new URLSearchParams(window.location.search).has('smoke')) {
+      window.__THREE = { Box3, Raycaster, Vector3, DoubleSide };
+    }
     const device = detectDevice();
     this.isTouch = device.isTouch;
     this.lowPower = device.lowPower;
@@ -282,6 +290,17 @@ export class GalleryEngine {
       this.artGroup.add(frameGroup);
     });
 
+    // 8 幅画全部登记完成后，才按「离相机由近到远」真正发起原图加载。
+    // 实测本机到 GitHub Pages 只有 13 KB/s：按数组顺序发，站在眼前的那幅可能要等满 3 分钟；
+    // 按距离发，近处的原图先落地，最坏情况下先清晰的是用户正在看的那一幅。
+    // 一级（缩略图）不参与排序——它们只有 10–22 KB 且进厅前已全部在缓存里。
+    const pending = this.pendingFullLoads;
+    this.pendingFullLoads = [];
+    pending.sort((a, b) => a.distance - b.distance);
+    for (const entry of pending) {
+      this.loadFullImage(entry.work, entry.material, entry.generation);
+    }
+
     this.controls.setInitial(this.room.cameraStart, this.room.cameraLookAt);
   }
 
@@ -322,6 +341,9 @@ export class GalleryEngine {
   createFrame(work, works, index, artists) {
     const group = new THREE.Group();
     const { width, height } = this.getArtworkDisplaySize(work, works);
+    // 布点是无副作用的纯函数（只依赖 index / 作品数 / 作品尺寸），上移到方法前部，
+    // 好让下面能算出这幅画到相机起点的距离，用于排序二级（原图）加载的发起顺序。
+    const placement = this.room.getArtworkTransform(index, works.length, work);
     // 兜底贴图上的画名按当前语言生成；语言切换不重建贴图（正式贴图已覆盖绝大多数场合）。
     const fallback = makeFallbackTexture(pick(work, 'title'));
     const paintMaterial = new THREE.MeshLambertMaterial({
@@ -335,22 +357,45 @@ export class GalleryEngine {
     paintPlane.name = 'artwork-canvas';
 
     const generation = this.loadGeneration;
-    this.loader.load(
-      work.image,
-      (texture) => {
-        if (generation !== this.loadGeneration) {
-          texture.dispose();
-          return;
-        }
-        texture.colorSpace = THREE.SRGBColorSpace;
-        texture.anisotropy = 8;
-        texture.minFilter = THREE.LinearFilter;
-        paintMaterial.map = texture;
-        paintMaterial.needsUpdate = true;
-      },
-      undefined,
-      () => {},
-    );
+
+    // 两级渐进加载。两级【同时】发起、不串行等缩略图：慢网下串行会把原图的等待时间再叠一层。
+    // 一级：缩略图（单张 10–22 KB，约为原图的 1/20，且时间线界面进入前已把 96 张全部预热进缓存），
+    // 通常立刻命中缓存，用来尽快把占位图换成一张真正能看的画。
+    const thumbUrl = typeof work.thumb === 'string' ? work.thumb.trim() : '';
+    if (thumbUrl) {
+      this.loader.load(
+        thumbUrl,
+        (texture) => {
+          if (generation !== this.loadGeneration) {
+            texture.dispose();
+            return;
+          }
+          // 原图已经先到（极端时序：缩略图未命中缓存而原图命中了），就不要用缩略图把清晰的原图盖回去。
+          if (paintMaterial.map !== fallback) {
+            texture.dispose();
+            return;
+          }
+          texture.colorSpace = THREE.SRGBColorSpace;
+          texture.anisotropy = 8;
+          // 顺序不能反：必须先把新贴图挂上材质，再 dispose 被替换下来的占位图。
+          // 反过来会让本帧（乃至 dispose 之后的任何同帧绘制）拿到已释放的 CanvasTexture，渲染出错。
+          paintMaterial.map = texture;
+          paintMaterial.needsUpdate = true;
+          fallback.dispose();
+        },
+        undefined,
+        // 缩略图失败就继续挂着占位图，等原图到达；这里不清空材质贴图。
+        () => {},
+      );
+    }
+
+    // 二级：原图这里不立即发起，只登记。等 setData() 里 8 幅画全部登记完，再按离相机的距离升序发。
+    this.pendingFullLoads.push({
+      work,
+      material: paintMaterial,
+      distance: placement.position.distanceTo(this.room.cameraStart),
+      generation,
+    });
 
     const frameStyle = this.getFrameStyle(work);
     const frameScale = Math.max(0.028, Math.min(0.1, width * 0.026));
@@ -434,7 +479,6 @@ export class GalleryEngine {
     group.userData.artworkId = work.id;
     this.canvasMeshes.push(paintPlane);
 
-    const placement = this.room.getArtworkTransform(index, works.length, work);
     group.position.copy(placement.position);
     if (placement.normal) {
       group.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), placement.normal);
@@ -447,6 +491,31 @@ export class GalleryEngine {
     group.position.y = THREE.MathUtils.clamp(group.position.y, bottomLimit, topLimit);
     this.addArtworkLighting(group, placement, width, height);
     return group;
+  }
+
+  // 二级：原图（单张 71–374 KB）。由 setData() 排序后按序调用。
+  loadFullImage(work, paintMaterial, generation) {
+    this.loader.load(
+      work.image,
+      (texture) => {
+        if (generation !== this.loadGeneration) {
+          texture.dispose();
+          return;
+        }
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.anisotropy = 8;
+        // 不再设 minFilter = LinearFilter：原图 1600px 在屏幕上基本是缩小显示，
+        // 关掉 mipmap 会让远处/斜视的画出现闪烁与摩尔纹，交给 three 的默认 mipmap 过滤。
+        // 顺序不能反：先换 map，再 dispose 被替换下来的那张（缩略图，或缩略图缺席/失败时的占位图）。
+        const previous = paintMaterial.map;
+        paintMaterial.map = texture;
+        paintMaterial.needsUpdate = true;
+        if (previous && previous !== texture) previous.dispose();
+      },
+      undefined,
+      // 原图失败时保留当前贴图（缩略图或占位图），不清空材质——空贴图会渲染成整块白板。
+      () => {},
+    );
   }
 
   addArtworkLighting(group, placement, width, height) {
@@ -793,6 +862,8 @@ export class GalleryEngine {
     this.canvasMeshes = [];
     this.labelObjects = [];
     this.loadGeneration += 1;
+    // 上一代尚未发起的原图加载一并作废：留着它们会在切房间后被发出去抢带宽。
+    this.pendingFullLoads = [];
     for (const target of this.spotTargets) this.scene.remove(target);
     this.spotTargets = [];
   }

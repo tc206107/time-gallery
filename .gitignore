@@ -14,3 +14,7 @@ __pycache__/
 
 # 本地验收截图（由 tools/smoke.mjs 每次运行重新生成，属产物不入库）
 verify-room-*.png
+
+# 本次验收工具的落盘产物（截图/审计 JSON）
+_audit-out/
+_i18n-label-sweep.json
